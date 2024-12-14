@@ -18,8 +18,8 @@ Dn - Диапазон в зависимости от номера ЦОДа
 **reserved = 8(N-1)+3**,  если N = 1 --> reserved = 3  
 **services = 8(N-1)+[4..7]**,  если N = 1 --> services = [4..7]
 
-IP Spine = 10.Dn.Sn.0/32, где Sn - номер Spine  
-IP Leaf - 10.Dn.0.Ln/32, где Ln - номер Leaf  
-IP p2p - 10.Dn.Sn.2(Ln-1)/31
+**IP Spine = 10.Dn.Sn.0/32**, где Sn - номер Spine  
+**IP Leaf = 10.Dn.0.Ln/32**, где Ln - номер Leaf  
+**IP p2p - 10.Dn.Sn.2(Ln-1)/31**
 
 ## Настройки адресации на оборудовании
