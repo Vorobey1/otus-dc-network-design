@@ -226,6 +226,7 @@ router ospf 1
 ```
 ## Вывод таблиц маршрутизации
 **Spine1**
+```
 Gateway of last resort is not set
 
  O        10.0.0.1/32 [110/110] via 10.2.1.0, Ethernet1
@@ -241,7 +242,9 @@ Gateway of last resort is not set
  O        10.2.2.0/31 [110/200] via 10.2.1.0, Ethernet1
  O        10.2.2.2/31 [110/200] via 10.2.1.2, Ethernet2
  O        10.2.2.4/31 [110/200] via 10.2.1.4, Ethernet3
+```
 **Spine2**
+```
 Gateway of last resort is not set
 
  O        10.0.0.1/32 [110/110] via 10.2.2.0, Ethernet1
@@ -257,7 +260,9 @@ Gateway of last resort is not set
  C        10.2.2.0/31 is directly connected, Ethernet1
  C        10.2.2.2/31 is directly connected, Ethernet2
  C        10.2.2.4/31 is directly connected, Ethernet3
+```
 **Leaf1**
+```
 Gateway of last resort is not set
 
  C        10.0.0.1/32 is directly connected, Loopback0
@@ -273,7 +278,9 @@ Gateway of last resort is not set
  C        10.2.2.0/31 is directly connected, Ethernet2
  O        10.2.2.2/31 [110/200] via 10.2.2.1, Ethernet2
  O        10.2.2.4/31 [110/200] via 10.2.2.1, Ethernet2
+```
 **Leaf2**
+```
 Gateway of last resort is not set
 
  O        10.0.0.1/32 [110/210] via 10.2.1.3, Ethernet1
@@ -289,7 +296,9 @@ Gateway of last resort is not set
  O        10.2.2.0/31 [110/200] via 10.2.2.3, Ethernet2
  C        10.2.2.2/31 is directly connected, Ethernet2
  O        10.2.2.4/31 [110/200] via 10.2.2.3, Ethernet2
+```
 **Leaf3**
+```
 Gateway of last resort is not set
 
  O        10.0.0.1/32 [110/210] via 10.2.1.5, Ethernet1
@@ -305,3 +314,4 @@ Gateway of last resort is not set
  O        10.2.2.0/31 [110/200] via 10.2.2.5, Ethernet2
  O        10.2.2.2/31 [110/200] via 10.2.2.5, Ethernet2
  C        10.2.2.4/31 is directly connected, Ethernet2
+```
