@@ -9,10 +9,9 @@
 ![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab1/screenshots/Topology.PNG)
 ## Адресное пространство для Underlay сети
 В качестве метода распределения IP-адресов используется способ, изученный на курсе  
-IP - 10.Dn.Sn.X, где  
-Dn - Диапазон в зависимости от номера ЦОДа,  
-Sn - Номер spine,  
-X - Значение по порядку.  
+
+Dn - Диапазон в зависимости от номера ЦОДа
+Dn = [8*(N-1)..8*N-1], где N - номер ЦОДа  
 
 IP для Spine - 10.Dn.Sn.0/32, где Sn - номер Spine  
 IP для Leaf - 10.Dn.0.Ln/32, где Ln - номер Leaf  
