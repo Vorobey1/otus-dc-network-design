@@ -63,3 +63,83 @@ interface Loopback0
 ip routing
 !
 ```
+**Spine2**
+```
+!
+hostname Spine2
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.2.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.2.2.5/31
+!
+interface Loopback0
+   ip address 10.0.2.0/32
+!
+ip routing
+!
+```
+**Leaf1**
+```
+!
+hostname Leaf1
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.0/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.0/31
+!
+interface Loopback0
+   ip address 10.0.0.1/32
+!
+ip routing
+!
+```
+**Leaf2**
+```
+!
+hostname Leaf2
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.2/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.2/31
+!
+interface Loopback0
+   ip address 10.0.0.2/32
+!
+ip routing
+!
+```
+**Leaf3**
+```
+!
+hostname Leaf3
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.4/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.4/31
+!
+interface Loopback0
+   ip address 10.0.0.3/32
+!
+ip routing
+!
+```
