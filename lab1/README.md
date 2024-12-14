@@ -12,7 +12,12 @@
 
 Dn - Диапазон в зависимости от номера ЦОДа  
 Dn = [8*(N-1)..8*N-1], где N - номер ЦОДа  
-Если N = 1 --> Dn = [0..7]  
+Если N = 1 --> Dn = [0..7], где  
+0 - Lo для Spine  
+1 - Lo для Leaf  
+2 - p2p между Leaf и Spine  
+3 - reserved  
+4-7 - services  
 
 IP для Spine - 10.Dn.Sn.0/32, где Sn - номер Spine  
 IP для Leaf - 10.Dn.0.Ln/32, где Ln - номер Leaf  
