@@ -8,5 +8,10 @@
 
 ![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab1/screenshots/Topology.PNG)
 ## Адресное пространство для Underlay сети
-
+В качестве метода распределения IP-адресов используется способ, изученный на курсе
+Lo - /32
+p2p - /31
+IP - 10.Dn.Sn.X, где:
+Dn - Диапазон в зависимости от номера ЦОДа,
+Sn - Номер spine,
 ## Настройки адресации на оборудовании
