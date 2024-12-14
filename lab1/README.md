@@ -40,3 +40,26 @@ Dn - Диапазон в зависимости от номера ЦОДа
 |Leaf3       |10.2.1.4/31 |10.2.2.4/31 |
 
 ## Настройки адресации на оборудовании
+**Spine1**
+'''
+!
+hostname Spine1
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.1.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.2.1.5/31
+!
+interface Loopback0
+   ip address 10.0.1.0/32
+!
+ip routing
+!
+'''
