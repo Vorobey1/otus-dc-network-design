@@ -5,7 +5,7 @@
 3. Настроить ISIS для Underlay сети
 4. Конфигурация АСО
 5. Вывод show commands (LSDB, Neighbors, ipv6 route)
-6. Тестирование доступности Loopbacks
+6. Тестирование доступности Loopbacks (Ping)
 ## Топология сети CLOS
 Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
 
@@ -499,4 +499,41 @@ Leaf3#show ipv6 route
            via fe80::5200:ff:fecb:38c2, Ethernet2
  C        fd00::2:204/127 [0/1]
            via Ethernet2, directly connected
+```
+## Тестирование доступности Loopbacks
+**Spine1**
+```
+Spine1#ping fd00::200 source lo0 repeat 1
+PING fd00::200(fd00::200) from fd00::100 : 52 data bytes
+60 bytes from fd00::200: icmp_seq=1 ttl=63 time=5.64 ms
+
+Spine1#ping fd00::1:1 source lo0 repeat 1
+PING fd00::1:1(fd00::1:1) from fd00::100 : 52 data bytes
+60 bytes from fd00::1:1: icmp_seq=1 ttl=64 time=2.70 ms
+
+Spine1#ping fd00::1:2 source lo0 repeat 1
+PING fd00::1:2(fd00::1:2) from fd00::100 : 52 data bytes
+60 bytes from fd00::1:2: icmp_seq=1 ttl=64 time=4.34 ms
+
+Spine1#ping fd00::1:3 source lo0 repeat 1
+PING fd00::1:3(fd00::1:3) from fd00::100 : 52 data bytes
+60 bytes from fd00::1:3: icmp_seq=1 ttl=64 time=3.05 ms
+```
+**Leaf3**
+```
+Leaf3#ping fd00::100 source fd00::1:3 repeat 1
+PING fd00::100(fd00::100) from fd00::1:3 : 52 data bytes
+60 bytes from fd00::100: icmp_seq=1 ttl=64 time=2.86 ms
+
+Leaf3#ping fd00::200 source fd00::1:3 repeat 1
+PING fd00::200(fd00::200) from fd00::1:3 : 52 data bytes
+60 bytes from fd00::200: icmp_seq=1 ttl=64 time=3.04 ms
+
+Leaf3#ping fd00::1:1 source fd00::1:3 repeat 1
+PING fd00::1:1(fd00::1:1) from fd00::1:3 : 52 data bytes
+60 bytes from fd00::1:1: icmp_seq=1 ttl=63 time=5.34 ms
+
+Leaf3#ping fd00::1:2 source fd00::1:3 repeat 1
+PING fd00::1:2(fd00::1:2) from fd00::1:3 : 52 data bytes
+60 bytes from fd00::1:2: icmp_seq=1 ttl=63 time=5.41 ms
 ```
