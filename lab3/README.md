@@ -57,5 +57,224 @@ Dn - Диапазон в зависимости от номера ЦОДа
 Для Leaf net - 49.PODn.PODn.0000.Ln.00  
 
 ## Конфигурация АСО
-
+**Spine1**
+```
+!
+hostname Spine1
+!
+interface Ethernet1
+   no switchport
+   ipv6 address fd00::2:101/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet2
+   no switchport
+   ipv6 address fd00::2:103/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet3
+   no switchport
+   ipv6 address fd00::2:105/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Loopback0
+   ipv6 address fd00::100/128
+   isis enable POD1
+!
+no ip routing
+!
+ipv6 unicast-routing
+!
+router isis POD1
+   net 49.0001.0001.0001.0000.00
+   is-type level-1
+   log-adjacency-changes
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+!
+```
+**Spine2**
+```
+!
+hostname Spine2
+!
+interface Ethernet1
+   no switchport
+   ipv6 address fd00::2:201/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet2
+   no switchport
+   ipv6 address fd00::2:203/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet3
+   no switchport
+   ipv6 address fd00::2:205/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Loopback0
+   ipv6 address fd00::200/128
+   isis enable POD1
+!
+no ip routing
+!
+ipv6 unicast-routing
+!
+router isis POD1
+   net 49.0001.0001.0002.0000.00
+   is-type level-1
+   log-adjacency-changes
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+!
+```
+**Leaf1**
+```
+!
+hostname Leaf1
+!
+interface Ethernet1
+   no switchport
+   ipv6 address fd00::2:100/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet2
+   no switchport
+   ipv6 address fd00::2:200/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Loopback0
+   ipv6 address fd00::1:1/128
+   isis enable POD1
+!
+no ip routing
+!
+ipv6 unicast-routing
+!
+router isis POD1
+   net 49.0001.0001.0000.0001.00
+   is-type level-1
+   log-adjacency-changes
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+!
+```
+**Leaf2**
+```
+!
+hostname Leaf2
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   no switchport
+   ipv6 address fd00::2:102/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet2
+   no switchport
+   ipv6 address fd00::2:202/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Loopback0
+   ipv6 address fd00::1:2/128
+   isis enable POD1
+!
+no ip routing
+!
+ipv6 unicast-routing
+!
+router isis POD1
+   net 49.0001.0001.0000.0002.00
+   is-type level-1
+   log-adjacency-changes
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+!
+```
+**Leaf3**
+```
+!
+hostname Leaf3
+!
+interface Ethernet1
+   no switchport
+   ipv6 address fd00::2:104/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Ethernet2
+   no switchport
+   ipv6 address fd00::2:204/127
+   isis enable POD1
+   isis circuit-type level-1
+   isis network point-to-point
+   isis authentication mode md5
+   isis authentication key 7 2pd/xh7ZVL71OF4V0/L3hA==
+!
+interface Loopback0
+   ipv6 address fd00::1:3/128
+   isis enable POD1
+!
+no ip routing
+!
+ipv6 unicast-routing
+!
+router isis POD1
+   net 49.0001.0001.0000.0003.00
+   is-type level-1
+   log-adjacency-changes
+   !
+   address-family ipv6 unicast
+      bfd all-interfaces
+!
+```
 
