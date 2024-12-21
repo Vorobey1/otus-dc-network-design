@@ -4,7 +4,7 @@
 2. Распределить адресное пространство для Underlay cети
 3. Настроить ISIS для Underlay сети
 4. Конфигурация АСО
-5. Вывод show command (LSDB, Neighbors, ipv6 route)
+5. Вывод show commands (LSDB, Neighbors, ipv6 route)
 6. Тестирование доступности Loopbacks
 ## Топология сети CLOS
 Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
@@ -277,4 +277,4 @@ router isis POD1
       bfd all-interfaces
 !
 ```
-
+## Вывод show commands
