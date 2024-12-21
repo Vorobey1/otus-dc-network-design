@@ -278,3 +278,225 @@ router isis POD1
 !
 ```
 ## Вывод show commands
+**Spine1**
+```
+Spine1#show isis database 
+
+IS-IS Instance: POD1 VRF: default
+  IS-IS Level 1 Link State Database
+    LSPID                   Seq Num  Cksum  Life Length IS Flags
+    Leaf1.00-00                  11  29072  1177    196 L1 <>
+    Leaf2.00-00                   3  55332   556    196 L1 <>
+    Leaf3.00-00                   4   2532   627    196 L1 <>
+    Spine1.00-00                  8  46572   713    246 L1 <>
+    Spine2.00-00                  9  57532  1137    246 L1 <>
+Spine1#show isis neighbors 
+ 
+Instance  VRF      System Id        Type Interface          SNPA              State Hold time   Circuit Id          
+POD1      default  Leaf1            L1   Ethernet1          P2P               UP    26          0D                  
+POD1      default  Leaf2            L1   Ethernet2          P2P               UP    25          0D                  
+POD1      default  Leaf3            L1   Ethernet3          P2P               UP    28          0D                  
+Spine1#show ipv6 route
+
+ C        fd00::100/128 [0/0]
+           via Loopback0, directly connected
+ I L1     fd00::200/128 [115/30]
+           via fe80::5200:ff:fed5:5dc0, Ethernet1
+           via fe80::5200:ff:fe03:3766, Ethernet2
+           via fe80::5200:ff:fe15:f4e8, Ethernet3
+ I L1     fd00::1:1/128 [115/20]
+           via fe80::5200:ff:fed5:5dc0, Ethernet1
+ I L1     fd00::1:2/128 [115/20]
+           via fe80::5200:ff:fe03:3766, Ethernet2
+ I L1     fd00::1:3/128 [115/20]
+           via fe80::5200:ff:fe15:f4e8, Ethernet3
+ C        fd00::2:100/127 [0/1]
+           via Ethernet1, directly connected
+ C        fd00::2:102/127 [0/1]
+           via Ethernet2, directly connected
+ C        fd00::2:104/127 [0/1]
+           via Ethernet3, directly connected
+ I L1     fd00::2:200/127 [115/20]
+           via fe80::5200:ff:fed5:5dc0, Ethernet1
+ I L1     fd00::2:202/127 [115/20]
+           via fe80::5200:ff:fe03:3766, Ethernet2
+ I L1     fd00::2:204/127 [115/20]
+           via fe80::5200:ff:fe15:f4e8, Ethernet3
+```
+**Spine2**
+```
+Spine2#show isis database 
+
+IS-IS Instance: POD1 VRF: default
+  IS-IS Level 1 Link State Database
+    LSPID                   Seq Num  Cksum  Life Length IS Flags
+    Leaf1.00-00                   8  30605   701    196 L1 <>
+    Leaf2.00-00                   3  55332   857    196 L1 <>
+    Leaf3.00-00                   4   2532   927    196 L1 <>
+    Spine1.00-00                  8  46572  1014    246 L1 <>
+    Spine2.00-00                  5  10616   565    246 L1 <>
+Spine2#show isis neighbors
+ 
+Instance  VRF      System Id        Type Interface          SNPA              State Hold time   Circuit Id          
+POD1      default  Leaf1            L1   Ethernet1          P2P               UP    29          0E                  
+POD1      default  Leaf2            L1   Ethernet2          P2P               UP    28          0E                  
+POD1      default  Leaf3            L1   Ethernet3          P2P               UP    29          0E                  
+Spine2#show ipv6 route 
+
+ I L1     fd00::100/128 [115/30]
+           via fe80::5200:ff:fed5:5dc0, Ethernet1
+           via fe80::5200:ff:fe03:3766, Ethernet2
+           via fe80::5200:ff:fe15:f4e8, Ethernet3
+ C        fd00::200/128 [0/0]
+           via Loopback0, directly connected
+ I L1     fd00::1:1/128 [115/20]
+           via fe80::5200:ff:fed5:5dc0, Ethernet1
+ I L1     fd00::1:2/128 [115/20]
+           via fe80::5200:ff:fe03:3766, Ethernet2
+ I L1     fd00::1:3/128 [115/20]
+           via fe80::5200:ff:fe15:f4e8, Ethernet3
+ I L1     fd00::2:100/127 [115/20]
+           via fe80::5200:ff:fed5:5dc0, Ethernet1
+ I L1     fd00::2:102/127 [115/20]
+           via fe80::5200:ff:fe03:3766, Ethernet2
+ I L1     fd00::2:104/127 [115/20]
+           via fe80::5200:ff:fe15:f4e8, Ethernet3
+ C        fd00::2:200/127 [0/1]
+           via Ethernet1, directly connected
+ C        fd00::2:202/127 [0/1]
+           via Ethernet2, directly connected
+ C        fd00::2:204/127 [0/1]
+           via Ethernet3, directly connected
+```
+**Leaf1**
+```
+Leaf1#show isis database 
+
+IS-IS Instance: POD1 VRF: default
+  IS-IS Level 1 Link State Database
+    LSPID                   Seq Num  Cksum  Life Length IS Flags
+    Leaf1.00-00                   8  30605   761    196 L1 <>
+    Leaf2.00-00                   3  55332   917    196 L1 <>
+    Leaf3.00-00                   4   2532   988    196 L1 <>
+    Spine1.00-00                  8  46572  1074    246 L1 <>
+    Spine2.00-00                  5  10616   625    246 L1 <>
+Leaf1#show isis neighbors 
+ 
+Instance  VRF      System Id        Type Interface          SNPA              State Hold time   Circuit Id          
+POD1      default  Spine1           L1   Ethernet1          P2P               UP    24          0D                  
+POD1      default  Spine2           L1   Ethernet2          P2P               UP    23          0D                  
+Leaf1#show ipv6 route 
+
+ I L1     fd00::100/128 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ I L1     fd00::200/128 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ C        fd00::1:1/128 [0/0]
+           via Loopback0, directly connected
+ I L1     fd00::1:2/128 [115/30]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::1:3/128 [115/30]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ C        fd00::2:100/127 [0/1]
+           via Ethernet1, directly connected
+ I L1     fd00::2:102/127 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ I L1     fd00::2:104/127 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ C        fd00::2:200/127 [0/1]
+           via Ethernet2, directly connected
+ I L1     fd00::2:202/127 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::2:204/127 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+```
+**Leaf2**
+```
+Leaf2#show isis database 
+
+IS-IS Instance: POD1 VRF: default
+  IS-IS Level 1 Link State Database
+    LSPID                   Seq Num  Cksum  Life Length IS Flags
+    Leaf1.00-00                   8  30605   803    196 L1 <>
+    Leaf2.00-00                   3  55332   959    196 L1 <>
+    Leaf3.00-00                   4   2532  1029    196 L1 <>
+    Spine1.00-00                  8  46572  1116    246 L1 <>
+    Spine2.00-00                  5  10616   667    246 L1 <>
+Leaf2#show isis neighbors 
+ 
+Instance  VRF      System Id        Type Interface          SNPA              State Hold time   Circuit Id          
+POD1      default  Spine1           L1   Ethernet1          P2P               UP    23          0E                  
+POD1      default  Spine2           L1   Ethernet2          P2P               UP    29          0E                  
+Leaf2#show ipv6 route 
+
+ I L1     fd00::100/128 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ I L1     fd00::200/128 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::1:1/128 [115/30]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ C        fd00::1:2/128 [0/0]
+           via Loopback0, directly connected
+ I L1     fd00::1:3/128 [115/30]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::2:100/127 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ C        fd00::2:102/127 [0/1]
+           via Ethernet1, directly connected
+ I L1     fd00::2:104/127 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ I L1     fd00::2:200/127 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ C        fd00::2:202/127 [0/1]
+           via Ethernet2, directly connected
+ I L1     fd00::2:204/127 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+```
+**Leaf3**
+```
+Leaf3#show isis database 
+
+IS-IS Instance: POD1 VRF: default
+  IS-IS Level 1 Link State Database
+    LSPID                   Seq Num  Cksum  Life Length IS Flags
+    Leaf1.00-00                   8  30605   868    196 L1 <>
+    Leaf2.00-00                   3  55332  1023    196 L1 <>
+    Leaf3.00-00                   4   2532  1094    196 L1 <>
+    Spine1.00-00                  8  46572  1181    246 L1 <>
+    Spine2.00-00                  5  10616   731    246 L1 <>
+Leaf3#show isis neighbors 
+ 
+Instance  VRF      System Id        Type Interface          SNPA              State Hold time   Circuit Id          
+POD1      default  Spine1           L1   Ethernet1          P2P               UP    24          0F                  
+POD1      default  Spine2           L1   Ethernet2          P2P               UP    29          0F
+Leaf3#show ipv6 route
+
+ I L1     fd00::100/128 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ I L1     fd00::200/128 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::1:1/128 [115/30]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::1:2/128 [115/30]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ C        fd00::1:3/128 [0/0]
+           via Loopback0, directly connected
+ I L1     fd00::2:100/127 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ I L1     fd00::2:102/127 [115/20]
+           via fe80::5200:ff:fed7:ee0b, Ethernet1
+ C        fd00::2:104/127 [0/1]
+           via Ethernet1, directly connected
+ I L1     fd00::2:200/127 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ I L1     fd00::2:202/127 [115/20]
+           via fe80::5200:ff:fecb:38c2, Ethernet2
+ C        fd00::2:204/127 [0/1]
+           via Ethernet2, directly connected
+```
