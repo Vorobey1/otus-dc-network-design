@@ -12,9 +12,9 @@ Dn - Диапазон в зависимости от номера ЦОДа
 **reserved = 8(N-1)+3**,  если N = 1 --> reserved = 3  
 **services = 8(N-1)+[4..7]**,  если N = 1 --> services = [4..7]
 
-**IP Spine = FD00::Dn.Sn.0/32**, где Sn - номер Spine  
-**IP Leaf = 10.Dn.0.Ln/32**, где Ln - номер Leaf  
-**IP p2p - 10.Dn.Sn.2(Ln-1)/31**  
+**IP Spine = FD00::Dn:Sn:0/128**, где Sn - номер Spine  
+**IP Leaf = FD00::Dn:0:Ln/128**, где Ln - номер Leaf  
+**IP p2p = FD00::Dn:Sn:2(Ln-1)/127**  
 
 
 FD00:0000:0000:0000:0000:0000:0000:0000---
