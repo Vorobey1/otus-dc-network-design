@@ -9,7 +9,7 @@
 ## Топология сети CLOS
 Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
 
-![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab3/screenshots/Topology.PNG)
+![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab4/screenshots/Topology.PNG)
 ## Адресное пространство для Underlay сети
 Для выполения данной лабораторной работы будем использовать IPv6. Метод распределения IP-адресов в IPv6 будет аналогичен методу для IPv4, который был изучен на курсе.  
 Думаю, что для Underlay необходимо использовать ULA (Unique Local Address). Для простоты (откажемся от правильной генерации сети ULA) используeм следующую сеть в одном ЦОД - FD00::/109.  
@@ -44,4 +44,6 @@ Dn - Диапазон в зависимости от номера ЦОДа
 |Leaf1       |FD00:2:100/127|FD00:2:200/127|
 |Leaf2       |FD00:2:102/127|FD00:2:202/127|
 |Leaf3       |FD00:2:104/127|FD00:2:202/127|
+
+## Настройка ISIS для Underlay сети
 
