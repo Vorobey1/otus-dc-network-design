@@ -205,6 +205,7 @@ ipv6 unicast-routing
 !
 router bgp 64086.60002
    bgp asn notation asdot
+   router-id 10.0.0.2
    maximum-paths 2
    neighbor fd00::2:103 remote-as 64086.60000
    neighbor fd00::2:103 bfd
@@ -241,6 +242,7 @@ ipv6 unicast-routing
 !
 router bgp 64086.60003
    bgp asn notation asdot
+   router-id 10.0.0.3
    maximum-paths 2
    neighbor fd00::2:105 remote-as 64086.60000
    neighbor fd00::2:105 bfd
@@ -366,7 +368,7 @@ Leaf1#show ipv6 route
 ```
 Leaf2#show ipv6 bgp 
 BGP routing table information for VRF default
-Router identifier 10.2.1.2, local AS number 64086.60002
+Router identifier 10.0.0.1, local AS number 64086.60002
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::100/128          fd00::2:103           0       100     0       64086.60000 i
  * >     fd00::200/128          fd00::2:203           0       100     0       64086.60000 i
@@ -377,7 +379,7 @@ Router identifier 10.2.1.2, local AS number 64086.60002
  *  ec   fd00::1:3/128          fd00::2:203           0       100     0       64086.60000 64086.60003 i
 Leaf2#show ipv6 bgp summary 
 BGP summary information for VRF default
-Router identifier 10.2.1.2, local AS number 64086.60002
+Router identifier 10.0.0.2, local AS number 64086.60002
 Neighbor Status Codes: m - Under maintenance
   Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
   fd00::2:103      4  64086.60000       318       320    0    0 00:07:59 Estab   3      3
@@ -404,7 +406,7 @@ Leaf2#show ipv6 route
 ```
 Leaf3#show ipv6 bgp 
 BGP routing table information for VRF default
-Router identifier 10.2.1.4, local AS number 64086.60003
+Router identifier 10.0.0.3, local AS number 64086.60003
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::100/128          fd00::2:105           0       100     0       64086.60000 i
  * >     fd00::200/128          fd00::2:205           0       100     0       64086.60000 i
@@ -415,7 +417,7 @@ Router identifier 10.2.1.4, local AS number 64086.60003
  * >     fd00::1:3/128          -                     0       0       -       i
 Leaf3#show ipv6 bgp summary 
 BGP summary information for VRF default
-Router identifier 10.2.1.4, local AS number 64086.60003
+Router identifier 10.0.0.3, local AS number 64086.60003
 Neighbor Status Codes: m - Under maintenance
   Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
   fd00::2:105      4  64086.60000       354       356    0    0 00:08:22 Estab   3      3
