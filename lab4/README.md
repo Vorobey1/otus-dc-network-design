@@ -368,7 +368,7 @@ Leaf1#show ipv6 route
 ```
 Leaf2#show ipv6 bgp 
 BGP routing table information for VRF default
-Router identifier 10.0.0.1, local AS number 64086.60002
+Router identifier 10.0.0.2, local AS number 64086.60002
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::100/128          fd00::2:103           0       100     0       64086.60000 i
  * >     fd00::200/128          fd00::2:203           0       100     0       64086.60000 i
