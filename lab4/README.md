@@ -292,14 +292,9 @@ Spine1#show ipv6 route
 ```
 **Spine2**
 ```
-Spine2#show ipv6 bg
+Spine2#show ipv6 bgp
 BGP routing table information for VRF default
 Router identifier 10.0.2.0, local AS number 64086.60000
-Route status codes: * - valid, > - active, # - not installed, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup, L - labeled-unicast
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
-
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::200/128          -                     0       0       -       i
  * >     fd00::1:1/128          fd00::2:200           0       100     0       64086.60001 i
@@ -314,16 +309,6 @@ Neighbor Status Codes: m - Under maintenance
   fd00::2:202      4  64086.60002        55        52    0    0 00:07:37 Estab   1      1
   fd00::2:204      4  64086.60003        47        43    0    0 00:06:57 Estab   1      1
 Spine2#show ipv6 route 
-
-VRF: default
-Displaying 7 of 14 IPv6 routing table entries
-Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
-       B - Other BGP Routes, A B - BGP Aggregate, R - RIP,
-       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,
-       NG - Nexthop Group Static Route, M - Martian,
-       DP - Dynamic Policy Route, L - VRF Leaked,
-       RC - Route Cache Route
-
  C        fd00::200/128 [0/0]
            via Loopback0, directly connected
  B E      fd00::1:1/128 [200/0]
@@ -338,18 +323,12 @@ Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
            via Ethernet2, directly connected
  C        fd00::2:204/127 [0/1]
            via Ethernet3, directly connected
-!
 ```
 **Leaf1**
 ```
 Leaf1#show ipv6 bgp 
 BGP routing table information for VRF default
 Router identifier 10.0.0.1, local AS number 64086.60001
-Route status codes: * - valid, > - active, # - not installed, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup, L - labeled-unicast
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
-
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::100/128          fd00::2:101           0       100     0       64086.60000 i
  * >     fd00::200/128          fd00::2:201           0       100     0       64086.60000 i
@@ -366,16 +345,6 @@ Neighbor Status Codes: m - Under maintenance
   fd00::2:101      4  64086.60000       363       371    0    0 00:10:58 Estab   3      3
   fd00::2:201      4  64086.60000        63        69    0    0 00:10:48 Estab   3      3
 Leaf1#show ipv6 route 
-
-VRF: default
-Displaying 7 of 13 IPv6 routing table entries
-Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
-       B - Other BGP Routes, A B - BGP Aggregate, R - RIP,
-       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,
-       NG - Nexthop Group Static Route, M - Martian,
-       DP - Dynamic Policy Route, L - VRF Leaked,
-       RC - Route Cache Route
-
  B E      fd00::100/128 [200/0]
            via fd00::2:101, Ethernet1
  B E      fd00::200/128 [200/0]
@@ -392,18 +361,12 @@ Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
            via Ethernet1, directly connected
  C        fd00::2:200/127 [0/1]
            via Ethernet2, directly connected
-!
 ```
 **Leaf2**
 ```
 Leaf2#show ipv6 bgp 
 BGP routing table information for VRF default
 Router identifier 10.2.1.2, local AS number 64086.60002
-Route status codes: * - valid, > - active, # - not installed, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup, L - labeled-unicast
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
-
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::100/128          fd00::2:103           0       100     0       64086.60000 i
  * >     fd00::200/128          fd00::2:203           0       100     0       64086.60000 i
@@ -420,16 +383,6 @@ Neighbor Status Codes: m - Under maintenance
   fd00::2:103      4  64086.60000       318       320    0    0 00:07:59 Estab   3      3
   fd00::2:203      4  64086.60000        52        58    0    0 00:08:33 Estab   3      3
 Leaf2#show ipv6 route 
-
-VRF: default
-Displaying 7 of 13 IPv6 routing table entries
-Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
-       B - Other BGP Routes, A B - BGP Aggregate, R - RIP,
-       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,
-       NG - Nexthop Group Static Route, M - Martian,
-       DP - Dynamic Policy Route, L - VRF Leaked,
-       RC - Route Cache Route
-
  B E      fd00::100/128 [200/0]
            via fd00::2:103, Ethernet1
  B E      fd00::200/128 [200/0]
@@ -446,18 +399,12 @@ Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
            via Ethernet1, directly connected
  C        fd00::2:202/127 [0/1]
            via Ethernet2, directly connected
-!
 ```
 **Leaf3**
 ```
 Leaf3#show ipv6 bgp 
 BGP routing table information for VRF default
 Router identifier 10.2.1.4, local AS number 64086.60003
-Route status codes: * - valid, > - active, # - not installed, E - ECMP head, e - ECMP
-                    S - Stale, c - Contributing to ECMP, b - backup, L - labeled-unicast
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
-
          Network                Next Hop            Metric  LocPref Weight  Path
  * >     fd00::100/128          fd00::2:105           0       100     0       64086.60000 i
  * >     fd00::200/128          fd00::2:205           0       100     0       64086.60000 i
@@ -474,16 +421,6 @@ Neighbor Status Codes: m - Under maintenance
   fd00::2:105      4  64086.60000       354       356    0    0 00:08:22 Estab   3      3
   fd00::2:205      4  64086.60000        76        82    0    0 00:08:20 Estab   3      3
 Leaf3#show ipv6 route 
-
-VRF: default
-Displaying 7 of 13 IPv6 routing table entries
-Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
-       B - Other BGP Routes, A B - BGP Aggregate, R - RIP,
-       I L1 - IS-IS level 1, I L2 - IS-IS level 2, DH - DHCP,
-       NG - Nexthop Group Static Route, M - Martian,
-       DP - Dynamic Policy Route, L - VRF Leaked,
-       RC - Route Cache Route
-
  B E      fd00::100/128 [200/0]
            via fd00::2:105, Ethernet1
  B E      fd00::200/128 [200/0]
@@ -500,5 +437,32 @@ Codes: C - connected, S - static, K - kernel, O3 - OSPFv3,
            via Ethernet1, directly connected
  C        fd00::2:204/127 [0/1]
            via Ethernet2, directly connected
-!
+```
+## Тестирование доступности Loopbacks
+**Leaf1**
+```
+Leaf1#ping ipv6 fd00::1:2 source fd00::1:1 repeat 1
+PING fd00::1:2(fd00::1:2) from fd00::1:1 : 52 data bytes
+60 bytes from fd00::1:2: icmp_seq=1 ttl=63 time=5.63 ms
+Leaf1#ping ipv6 fd00::1:3 source fd00::1:1 repeat 1
+PING fd00::1:3(fd00::1:3) from fd00::1:1 : 52 data bytes
+60 bytes from fd00::1:3: icmp_seq=1 ttl=63 time=5.22 ms
+```
+**Leaf2**
+```
+Leaf2(config)#ping ipv6 fd00::1:1 source fd00::1:2 repeat 1
+PING fd00::1:1(fd00::1:1) from fd00::1:2 : 52 data bytes
+60 bytes from fd00::1:1: icmp_seq=1 ttl=63 time=5.66 ms
+Leaf2(config)#ping ipv6 fd00::1:3 source fd00::1:2 repeat 1
+PING fd00::1:3(fd00::1:3) from fd00::1:2 : 52 data bytes
+60 bytes from fd00::1:3: icmp_seq=1 ttl=63 time=6.10 ms
+```
+**Leaf3**
+```
+Leaf3#ping ipv6 fd00::1:1 source fd00::1:3 repeat 1
+PING fd00::1:1(fd00::1:1) from fd00::1:3 : 52 data bytes
+60 bytes from fd00::1:1: icmp_seq=1 ttl=63 time=5.38 ms
+Leaf3#ping ipv6 fd00::1:2 source fd00::1:3 repeat 1
+PING fd00::1:2(fd00::1:2) from fd00::1:3 : 52 data bytes
+60 bytes from fd00::1:2: icmp_seq=1 ttl=63 time=5.27 ms
 ```
