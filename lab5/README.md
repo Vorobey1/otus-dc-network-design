@@ -69,7 +69,6 @@ Dn - Диапазон в зависимости от номера ЦОДа
 ```
 vlan 10
    name SERVICE-1
-!
 vlan 20
    name SERVICE-2
 ```
@@ -89,7 +88,18 @@ neighbor NEIGHBOR send-community extended
    address-family evpn
       neighbor NEIGHBOR activate
 ```
-
+На VTEP создадим EVPN Instance (EVI): указываем RD, RT, включаем анонс MAC-адресов
+```
+router bgp ASN
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+```
 
 ## Конфигурация АСО
 **Spine1**
