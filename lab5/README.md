@@ -105,6 +105,8 @@ router bgp ASN
 **Spine1**
 ```
 !
+service routing protocols model multi-agent
+!
 hostname Spine1
 !
 interface Ethernet1
@@ -126,30 +128,32 @@ no ip routing
 !
 ipv6 unicast-routing
 !
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000097-4200000099 result accept
+!
 router bgp 64086.60000
    bgp asn notation asdot
    router-id 10.0.1.0
    timers bgp 3 9
    maximum-paths 3
-   neighbor fd00::2:100 remote-as 64086.60001
-   neighbor fd00::2:100 bfd
-   neighbor fd00::2:100 password 7 TtEEh4cth76q956T3TrsHg==
-   neighbor fd00::2:102 remote-as 64086.60002
-   neighbor fd00::2:102 bfd
-   neighbor fd00::2:102 password 7 Sl1LPqFEWbAjE25t7N2LXQ==
-   neighbor fd00::2:104 remote-as 64086.60003
-   neighbor fd00::2:104 bfd
-   neighbor fd00::2:104 password 7 2ULH8OJ/jDAeDydnYKfIUA==
+   bgp listen range fd00::2:100/120 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
    !
    address-family ipv6
-      neighbor fd00::2:100 activate
-      neighbor fd00::2:102 activate
-      neighbor fd00::2:104 activate
+      neighbor LEAF activate
       network fd00::100/128
 !
 ```
 **Spine2**
 ```
+!
+service routing protocols model multi-agent
 !
 hostname Spine2
 !
@@ -172,31 +176,40 @@ no ip routing
 !
 ipv6 unicast-routing
 !
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000097-4200000099 result accept
+!
 router bgp 64086.60000
    bgp asn notation asdot
    router-id 10.0.2.0
+   timers bgp 3 9
    maximum-paths 3
-   neighbor fd00::2:200 remote-as 64086.60001
-   neighbor fd00::2:200 bfd
-   neighbor fd00::2:200 password 7 HfF+8I6sqbvSWub/PH45YQ==
-   neighbor fd00::2:202 remote-as 64086.60002
-   neighbor fd00::2:202 bfd
-   neighbor fd00::2:202 password 7 zt/vmDxoIUI7cl8z0Ul+bQ==
-   neighbor fd00::2:204 remote-as 64086.60003
-   neighbor fd00::2:204 bfd
-   neighbor fd00::2:204 password 7 vDBozeY7rR6HIcnLP9h5Aw==
+   bgp listen range fd00::2:200/120 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
    !
    address-family ipv6
-      neighbor fd00::2:200 activate
-      neighbor fd00::2:202 activate
-      neighbor fd00::2:204 activate
+      neighbor LEAF activate
       network fd00::200/128
 !
 ```
 **Leaf1**
 ```
 !
+service routing protocols model multi-agent
+!
 hostname Leaf1
+!
+vlan 10
+   name SERVICE-1
+!
+vlan 20
+   name SERVICE-2
 !
 interface Ethernet1
    no switchport
@@ -206,8 +219,19 @@ interface Ethernet2
    no switchport
    ipv6 address fd00::2:200/127
 !
+interface Ethernet8
+   switchport access vlan 10
+   spanning-tree portfast
+!
 interface Loopback0
    ipv6 address fd00::1:1/128
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan encapsulation ipv6
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
 !
 no ip routing
 !
@@ -217,23 +241,44 @@ router bgp 64086.60001
    bgp asn notation asdot
    router-id 10.0.0.1
    maximum-paths 2
-   neighbor fd00::2:101 remote-as 64086.60000
-   neighbor fd00::2:101 bfd
-   neighbor fd00::2:101 password 7 TtEEh4cth76q956T3TrsHg==
-   neighbor fd00::2:201 remote-as 64086.60000
-   neighbor fd00::2:201 bfd
-   neighbor fd00::2:201 password 7 HfF+8I6sqbvSWub/PH45YQ==
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor fd00::2:101 peer group SPINE
+   neighbor fd00::2:201 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
    !
    address-family ipv6
-      neighbor fd00::2:101 activate
-      neighbor fd00::2:201 activate
+      neighbor SPINE activate
       network fd00::1:1/128
 !
 ```
 **Leaf2**
 ```
 !
+service routing protocols model multi-agent
+!
 hostname Leaf2
+!
+vlan 10
+   name SERVICE-1
+!
+vlan 20
+   name SERVICE-2
 !
 interface Ethernet1
    no switchport
@@ -243,8 +288,19 @@ interface Ethernet2
    no switchport
    ipv6 address fd00::2:202/127
 !
+interface Ethernet8
+   switchport access vlan 20
+   spanning-tree portfast
+!
 interface Loopback0
    ipv6 address fd00::1:2/128
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan encapsulation ipv6
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
 !
 no ip routing
 !
@@ -254,23 +310,44 @@ router bgp 64086.60002
    bgp asn notation asdot
    router-id 10.0.0.2
    maximum-paths 2
-   neighbor fd00::2:103 remote-as 64086.60000
-   neighbor fd00::2:103 bfd
-   neighbor fd00::2:103 password 7 Sl1LPqFEWbAjE25t7N2LXQ==
-   neighbor fd00::2:203 remote-as 64086.60000
-   neighbor fd00::2:203 bfd
-   neighbor fd00::2:203 password 7 zt/vmDxoIUI7cl8z0Ul+bQ==
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor fd00::2:103 peer group SPINE
+   neighbor fd00::2:203 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
    !
    address-family ipv6
-      neighbor fd00::2:103 activate
-      neighbor fd00::2:203 activate
+      neighbor SPINE activate
       network fd00::1:2/128
 !
 ```
 **Leaf3**
 ```
 !
+service routing protocols model multi-agent
+!
 hostname Leaf3
+!
+vlan 10
+   name SERVICE-1
+!
+vlan 20
+   name SERVICE-2
 !
 interface Ethernet1
    no switchport
@@ -280,8 +357,23 @@ interface Ethernet2
    no switchport
    ipv6 address fd00::2:204/127
 !
+interface Ethernet7
+   switchport access vlan 10
+   spanning-tree portfast
+!
+interface Ethernet8
+   switchport access vlan 20
+   spanning-tree portfast
+!
 interface Loopback0
    ipv6 address fd00::1:3/128
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan encapsulation ipv6
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
 !
 no ip routing
 !
@@ -291,16 +383,29 @@ router bgp 64086.60003
    bgp asn notation asdot
    router-id 10.0.0.3
    maximum-paths 2
-   neighbor fd00::2:105 remote-as 64086.60000
-   neighbor fd00::2:105 bfd
-   neighbor fd00::2:105 password 7 2ULH8OJ/jDAeDydnYKfIUA==
-   neighbor fd00::2:205 remote-as 64086.60000
-   neighbor fd00::2:205 bfd
-   neighbor fd00::2:205 password 7 vDBozeY7rR6HIcnLP9h5Aw==
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor fd00::2:105 peer group SPINE
+   neighbor fd00::2:205 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
    !
    address-family ipv6
-      neighbor fd00::2:105 activate
-      neighbor fd00::2:205 activate
+      neighbor SPINE activate
       network fd00::1:3/128
 !
 ```
