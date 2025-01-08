@@ -72,7 +72,7 @@ vlan 10
 vlan 20
    name SERVICE-2
 ```
-Создадем NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
+Создадаем NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
 ```
 interface Vxlan1
    vxlan source-interface Loopback0
