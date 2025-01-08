@@ -6,7 +6,7 @@
 4. Настроить VXLAN EVPN
 5. Конфигурация АСО
 6. Вывод show commands (show bgp evpn, show bgp evpn summaru, show vxlan vtep, show mac address-table)
-7. Тестирование связности между клиентами (ping)
+7. Тестирование L2 связности между клиентами (ping)
 ## Топология сети CLOS
 Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
 
