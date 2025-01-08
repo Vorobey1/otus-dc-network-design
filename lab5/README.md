@@ -65,14 +65,14 @@ Dn - Диапазон в зависимости от номера ЦОДа
 Для упрощения конфигурации использовал peer groups. На Spine для автообнаружения соседей использовал bgp listen 
 
 ## Настройка VXLAN EVPN для L2 связности между клиентами
-Настроим VLAN 10,20 на всех Leaf (VTEP)
+Настраиваем VLAN 10,20 на всех Leaf (VTEP)
 ```
 vlan 10
    name SERVICE-1
 vlan 20
    name SERVICE-2
 ```
-Создадим NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
+Создадем NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
 ```
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -88,7 +88,7 @@ neighbor NEIGHBOR send-community extended
    address-family evpn
       neighbor NEIGHBOR activate
 ```
-На VTEP создадим EVPN Instance (EVI): указываем RD, RT, включаем анонс MAC-адресов
+На VTEP создадем EVPN Instance (EVI): указываем RD, RT, включаем анонс MAC-адресов
 ```
 router bgp ASN
    vlan 10
