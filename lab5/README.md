@@ -82,12 +82,12 @@ interface Vxlan1
    vxlan vlan 10 vni 10010
    vxlan vlan 20 vni 10020
 ```
-В BGP добавляем возможность пересылки extended community и активируем AF EVPN
+В BGP на Leaf и Spine добавляем возможность пересылки extended community и активируем AF EVPN
 ```
 router bgp ASN
 neighbor NEIGHBOR send-community extended
    address-family evpn
-      neighbor SPINE activate
+      neighbor NEIGHBOR activate
 ```
 
 
