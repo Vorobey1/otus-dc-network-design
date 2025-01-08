@@ -410,214 +410,234 @@ router bgp 64086.60003
 !
 ```
 ## Вывод show commands
-**Spine1**
-```
-Spine1#show ipv6 bgp 
-BGP routing table information for VRF default
-Router identifier 10.0.1.0, local AS number 64086.60000
-         Network                Next Hop            Metric  LocPref Weight  Path
- * >     fd00::100/128          -                     0       0       -       i
- * >     fd00::1:1/128          fd00::2:100           0       100     0       64086.60001 i
- * >     fd00::1:2/128          fd00::2:102           0       100     0       64086.60002 i
- * >     fd00::1:3/128          fd00::2:104           0       100     0       64086.60003 i
-Spine1#show ipv6 bgp summary 
-BGP summary information for VRF default
-Router identifier 10.0.1.0, local AS number 64086.60000
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:100      4  64086.60001       507       519    0    0 00:09:31 Estab   1      1
-  fd00::2:102      4  64086.60002       280       282    0    0 00:06:05 Estab   1      1
-  fd00::2:104      4  64086.60003       273       276    0    0 00:06:02 Estab   1      1
-Spine1#show ipv6 route 
- C        fd00::100/128 [0/0]
-           via Loopback0, directly connected
- B E      fd00::1:1/128 [200/0]
-           via fd00::2:100, Ethernet1
- B E      fd00::1:2/128 [200/0]
-           via fd00::2:102, Ethernet2
- B E      fd00::1:3/128 [200/0]
-           via fd00::2:104, Ethernet3
- C        fd00::2:100/127 [0/1]
-           via Ethernet1, directly connected
- C        fd00::2:102/127 [0/1]
-           via Ethernet2, directly connected
- C        fd00::2:104/127 [0/1]
-           via Ethernet3, directly connected
-```
-**Spine2**
-```
-Spine2#show ipv6 bgp
-BGP routing table information for VRF default
-Router identifier 10.0.2.0, local AS number 64086.60000
-         Network                Next Hop            Metric  LocPref Weight  Path
- * >     fd00::200/128          -                     0       0       -       i
- * >     fd00::1:1/128          fd00::2:200           0       100     0       64086.60001 i
- * >     fd00::1:2/128          fd00::2:202           0       100     0       64086.60002 i
- * >     fd00::1:3/128          fd00::2:204           0       100     0       64086.60003 i
-Spine2#show ipv6 bgp summary 
-BGP summary information for VRF default
-Router identifier 10.0.2.0, local AS number 64086.60000
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:200      4  64086.60001        67        64    0    0 00:10:18 Estab   1      1
-  fd00::2:202      4  64086.60002        55        52    0    0 00:07:37 Estab   1      1
-  fd00::2:204      4  64086.60003        47        43    0    0 00:06:57 Estab   1      1
-Spine2#show ipv6 route 
- C        fd00::200/128 [0/0]
-           via Loopback0, directly connected
- B E      fd00::1:1/128 [200/0]
-           via fd00::2:200, Ethernet1
- B E      fd00::1:2/128 [200/0]
-           via fd00::2:202, Ethernet2
- B E      fd00::1:3/128 [200/0]
-           via fd00::2:204, Ethernet3
- C        fd00::2:200/127 [0/1]
-           via Ethernet1, directly connected
- C        fd00::2:202/127 [0/1]
-           via Ethernet2, directly connected
- C        fd00::2:204/127 [0/1]
-           via Ethernet3, directly connected
-```
 **Leaf1**
 ```
-Leaf1#show ipv6 bgp 
+Leaf1#show bgp evpn
 BGP routing table information for VRF default
-Router identifier 10.0.0.1, local AS number 64086.60001
-         Network                Next Hop            Metric  LocPref Weight  Path
- * >     fd00::100/128          fd00::2:101           0       100     0       64086.60000 i
- * >     fd00::200/128          fd00::2:201           0       100     0       64086.60000 i
- * >     fd00::1:1/128          -                     0       0       -       i
- * >Ec   fd00::1:2/128          fd00::2:201           0       100     0       64086.60000 64086.60002 i
- *  ec   fd00::1:2/128          fd00::2:101           0       100     0       64086.60000 64086.60002 i
- * >Ec   fd00::1:3/128          fd00::2:101           0       100     0       64086.60000 64086.60003 i
- *  ec   fd00::1:3/128          fd00::2:201           0       100     0       64086.60000 64086.60003 i
-Leaf1#show ipv6 bgp summary 
-BGP summary information for VRF default
-Router identifier 10.0.0.1, local AS number 64086.60001
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:101      4  64086.60000       363       371    0    0 00:10:58 Estab   3      3
-  fd00::2:201      4  64086.60000        63        69    0    0 00:10:48 Estab   3      3
-Leaf1#show ipv6 route 
- B E      fd00::100/128 [200/0]
-           via fd00::2:101, Ethernet1
- B E      fd00::200/128 [200/0]
-           via fd00::2:201, Ethernet2
- C        fd00::1:1/128 [0/0]
-           via Loopback0, directly connected
- B E      fd00::1:2/128 [200/0]
-           via fd00::2:101, Ethernet1
-           via fd00::2:201, Ethernet2
- B E      fd00::1:3/128 [200/0]
-           via fd00::2:101, Ethernet1
-           via fd00::2:201, Ethernet2
- C        fd00::2:100/127 [0/1]
-           via Ethernet1, directly connected
- C        fd00::2:200/127 [0/1]
-           via Ethernet2, directly connected
-```
-**Leaf2**
-```
-Leaf2#show ipv6 bgp 
-BGP routing table information for VRF default
-Router identifier 10.0.0.2, local AS number 64086.60002
-         Network                Next Hop            Metric  LocPref Weight  Path
- * >     fd00::100/128          fd00::2:103           0       100     0       64086.60000 i
- * >     fd00::200/128          fd00::2:203           0       100     0       64086.60000 i
- * >Ec   fd00::1:1/128          fd00::2:203           0       100     0       64086.60000 64086.60001 i
- *  ec   fd00::1:1/128          fd00::2:103           0       100     0       64086.60000 64086.60001 i
- * >     fd00::1:2/128          -                     0       0       -       i
- * >Ec   fd00::1:3/128          fd00::2:103           0       100     0       64086.60000 64086.60003 i
- *  ec   fd00::1:3/128          fd00::2:203           0       100     0       64086.60000 64086.60003 i
-Leaf2#show ipv6 bgp summary 
-BGP summary information for VRF default
-Router identifier 10.0.0.2, local AS number 64086.60002
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:103      4  64086.60000       318       320    0    0 00:07:59 Estab   3      3
-  fd00::2:203      4  64086.60000        52        58    0    0 00:08:33 Estab   3      3
-Leaf2#show ipv6 route 
- B E      fd00::100/128 [200/0]
-           via fd00::2:103, Ethernet1
- B E      fd00::200/128 [200/0]
-           via fd00::2:203, Ethernet2
- B E      fd00::1:1/128 [200/0]
-           via fd00::2:103, Ethernet1
-           via fd00::2:203, Ethernet2
- C        fd00::1:2/128 [0/0]
-           via Loopback0, directly connected
- B E      fd00::1:3/128 [200/0]
-           via fd00::2:103, Ethernet1
-           via fd00::2:203, Ethernet2
- C        fd00::2:102/127 [0/1]
-           via Ethernet1, directly connected
- C        fd00::2:202/127 [0/1]
-           via Ethernet2, directly connected
-```
-**Leaf3**
-```
-Leaf3#show ipv6 bgp 
-BGP routing table information for VRF default
-Router identifier 10.0.0.3, local AS number 64086.60003
-         Network                Next Hop            Metric  LocPref Weight  Path
- * >     fd00::100/128          fd00::2:105           0       100     0       64086.60000 i
- * >     fd00::200/128          fd00::2:205           0       100     0       64086.60000 i
- * >Ec   fd00::1:1/128          fd00::2:105           0       100     0       64086.60000 64086.60001 i
- *  ec   fd00::1:1/128          fd00::2:205           0       100     0       64086.60000 64086.60001 i
- * >Ec   fd00::1:2/128          fd00::2:105           0       100     0       64086.60000 64086.60002 i
- *  ec   fd00::1:2/128          fd00::2:205           0       100     0       64086.60000 64086.60002 i
- * >     fd00::1:3/128          -                     0       0       -       i
-Leaf3#show ipv6 bgp summary 
-BGP summary information for VRF default
-Router identifier 10.0.0.3, local AS number 64086.60003
-Neighbor Status Codes: m - Under maintenance
-  Neighbor         V  AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:105      4  64086.60000       354       356    0    0 00:08:22 Estab   3      3
-  fd00::2:205      4  64086.60000        76        82    0    0 00:08:20 Estab   3      3
-Leaf3#show ipv6 route 
- B E      fd00::100/128 [200/0]
-           via fd00::2:105, Ethernet1
- B E      fd00::200/128 [200/0]
-           via fd00::2:205, Ethernet2
- B E      fd00::1:1/128 [200/0]
-           via fd00::2:105, Ethernet1
-           via fd00::2:205, Ethernet2
- B E      fd00::1:2/128 [200/0]
-           via fd00::2:105, Ethernet1
-           via fd00::2:205, Ethernet2
- C        fd00::1:3/128 [0/0]
-           via Loopback0, directly connected
- C        fd00::2:104/127 [0/1]
-           via Ethernet1, directly connected
- C        fd00::2:204/127 [0/1]
-           via Ethernet2, directly connected
-```
-## Тестирование доступности Loopbacks
-**Leaf1**
-```
-Leaf1#ping ipv6 fd00::1:2 source fd00::1:1 repeat 1
-PING fd00::1:2(fd00::1:2) from fd00::1:1 : 52 data bytes
-60 bytes from fd00::1:2: icmp_seq=1 ttl=63 time=5.63 ms
-Leaf1#ping ipv6 fd00::1:3 source fd00::1:1 repeat 1
-PING fd00::1:3(fd00::1:3) from fd00::1:1 : 52 data bytes
-60 bytes from fd00::1:3: icmp_seq=1 ttl=63 time=5.22 ms
-```
-**Leaf2**
-```
-Leaf2(config)#ping ipv6 fd00::1:1 source fd00::1:2 repeat 1
-PING fd00::1:1(fd00::1:1) from fd00::1:2 : 52 data bytes
-60 bytes from fd00::1:1: icmp_seq=1 ttl=63 time=5.66 ms
-Leaf2(config)#ping ipv6 fd00::1:3 source fd00::1:2 repeat 1
-PING fd00::1:3(fd00::1:3) from fd00::1:2 : 52 data bytes
-60 bytes from fd00::1:3: icmp_seq=1 ttl=63 time=6.10 ms
-```
-**Leaf3**
-```
-Leaf3#ping ipv6 fd00::1:1 source fd00::1:3 repeat 1
-PING fd00::1:1(fd00::1:1) from fd00::1:3 : 52 data bytes
-60 bytes from fd00::1:1: icmp_seq=1 ttl=63 time=5.38 ms
-Leaf3#ping ipv6 fd00::1:2 source fd00::1:3 repeat 1
-PING fd00::1:2(fd00::1:2) from fd00::1:3 : 52 data bytes
-60 bytes from fd00::1:2: icmp_seq=1 ttl=63 time=5.27 ms
-```
+Router identifier 10.0.0.1, local AS number 4200000097
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ * >Ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ * >      RD: 10.0.0.1:10 imet fd00::1:1
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.1:20 imet fd00::1:1
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.2:10 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:10 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ * >Ec    RD: 10.0.0.2:20 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:20 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ * >Ec    RD: 10.0.0.3:10 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:10 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:20 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:20 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+Leaf1#show bgp evpn summary 
+BGP summary information for VRF default
+Router identifier 10.0.0.1, local AS number 64086.60001
+Neighbor Status Codes: m - Under maintenance
+  Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  fd00::2:101 4 64086.60000      1645      1658    0    0 00:12:24 Estab   6      6
+  fd00::2:201 4 64086.60000      1650      1660    0    0 00:12:25 Estab   6      6
+!
+Leaf1#show vxlan vtep
+Remote VTEPS for Vxlan1:
+
+VTEP            Tunnel Type(s)
+--------------- --------------
+fd00::1:2       flood, unicast         
+fd00::1:3       flood, unicast
+!
+Leaf1#show mac address-table
+          Mac Address Table
+------------------------------------------------------------------
+
+Vlan    Mac Address       Type        Ports      Moves   Last Move
+----    -----------       ----        -----      -----   ---------
+  10    5000.0006.8001    DYNAMIC     Et8        1       0:00:59 ago
+  10    5000.0008.8001    DYNAMIC     Vx1        1       0:00:59 ago
+  20    5000.0007.8001    DYNAMIC     Vx1        1       0:00:05 ago
+  20    5000.0009.8001    DYNAMIC     Vx1        1       0:00:05 ago
+Total Mac Addresses for this criterion: 4
+!
+```
+**Leaf2**
+```
+Leaf2#show bgp evpn 
+BGP routing table information for VRF default
+Router identifier 10.0.0.2, local AS number 4200000098
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ * >      RD: 10.0.0.2:20 mac-ip 5000.0007.8001
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.3:10 mac-ip 5000.0008.8001
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:10 mac-ip 5000.0008.8001
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.1:10 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:10 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ * >Ec    RD: 10.0.0.1:20 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:20 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ * >      RD: 10.0.0.2:10 imet fd00::1:2
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.2:20 imet fd00::1:2
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.3:10 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:10 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:20 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:20 imet fd00::1:3
+                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
+Leaf2#show bgp evpn summary 
+BGP summary information for VRF default
+Router identifier 10.0.0.2, local AS number 64086.60002
+Neighbor Status Codes: m - Under maintenance
+  Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  fd00::2:103 4 64086.60000      2119      2126    0    0 01:29:15 Estab   7      7
+  fd00::2:203 4 64086.60000      2118      2115    0    0 01:29:11 Estab   7      7
+Leaf2#show vxlan vtep 
+Remote VTEPS for Vxlan1:
+
+VTEP            Tunnel Type(s)
+--------------- --------------
+fd00::1:3       flood, unicast
+fd00::1:1       flood, unicast
+
+Total number of remote VTEPS:  2
+Leaf2#show mac address-table 
+          Mac Address Table
+------------------------------------------------------------------
+
+Vlan    Mac Address       Type        Ports      Moves   Last Move
+----    -----------       ----        -----      -----   ---------
+  10    5000.0006.8001    DYNAMIC     Vx1        1       0:02:45 ago
+  10    5000.0008.8001    DYNAMIC     Vx1        1       0:02:45 ago
+  20    5000.0007.8001    DYNAMIC     Et8        1       0:01:51 ago
+  20    5000.0009.8001    DYNAMIC     Vx1        1       0:01:51 ago
+Total Mac Addresses for this criterion: 4
+```
+**Leaf3**
+```
+Leaf3#show bgp evpn 
+BGP routing table information for VRF default
+Router identifier 10.0.0.3, local AS number 4200000099
+Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
+                    c - Contributing to ECMP, % - Pending BGP convergence
+Origin codes: i - IGP, e - EGP, ? - incomplete
+AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
+
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ * >Ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ * >      RD: 10.0.0.3:10 mac-ip 5000.0008.8001
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.3:20 mac-ip 5000.0009.8001
+                                 -                     -       -       0       i
+ * >Ec    RD: 10.0.0.1:10 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:10 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ * >Ec    RD: 10.0.0.1:20 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:20 imet fd00::1:1
+                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
+ * >Ec    RD: 10.0.0.2:10 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:10 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ * >Ec    RD: 10.0.0.2:20 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:20 imet fd00::1:2
+                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
+ * >      RD: 10.0.0.3:10 imet fd00::1:3
+                                 -                     -       -       0       i
+ * >      RD: 10.0.0.3:20 imet fd00::1:3
+                                 -                     -       -       0       i
+Leaf3#show bgp evpn summary
+BGP summary information for VRF default
+Router identifier 10.0.0.3, local AS number 64086.60003
+Neighbor Status Codes: m - Under maintenance
+  Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
+  fd00::2:105 4 64086.60000       743       741    0    0 00:30:31 Estab   6      6
+  fd00::2:205 4 64086.60000       735       736    0    0 00:30:31 Estab   6      6
+Leaf3#show vxlan vtep 
+Remote VTEPS for Vxlan1:
+
+VTEP            Tunnel Type(s)
+--------------- --------------
+fd00::1:2       unicast, flood
+fd00::1:1       unicast, flood
+
+Total number of remote VTEPS:  2
+Leaf3#show mac address-table 
+          Mac Address Table
+------------------------------------------------------------------
+
+Vlan    Mac Address       Type        Ports      Moves   Last Move
+----    -----------       ----        -----      -----   ---------
+  10    5000.0006.8001    DYNAMIC     Vx1        1       0:03:38 ago
+  10    5000.0008.8001    DYNAMIC     Et7        1       0:03:38 ago
+  20    5000.0007.8001    DYNAMIC     Vx1        1       0:02:44 ago
+  20    5000.0009.8001    DYNAMIC     Et8        1       0:02:44 ago
+Total Mac Addresses for this criterion: 4
+```
+## Тестирование L2 связности между клиентами
+**Client1 --> Client3**
+```
+Client1#ping FD00::4:3 source FD00::4:1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to FD00::4:3, timeout is 2 seconds:
+Packet sent with a source address of FD00::4:1
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 11/11/14 ms
+```
+**Client2 --> Client4**
+```
+Client2#ping  FD00::5:4 source FD00::5:2
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to FD00::5:4, timeout is 2 seconds:
+Packet sent with a source address of FD00::5:2
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 10/11/15 ms
+```
