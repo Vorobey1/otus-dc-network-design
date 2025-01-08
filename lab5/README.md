@@ -73,7 +73,7 @@ vlan 10
 vlan 20
    name SERVICE-2
 ```
-Создадим NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) с использованием ipv6 и свяжем VLAN c VNI
+Создадим NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
 ```
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -81,6 +81,13 @@ interface Vxlan1
    vxlan encapsulation ipv6
    vxlan vlan 10 vni 10010
    vxlan vlan 20 vni 10020
+```
+В BGP добавляем возможность пересылки extended community и активируем AF EVPN
+```
+router bgp ASN
+neighbor NEIGHBOR send-community extended
+   address-family evpn
+      neighbor SPINE activate
 ```
 
 
