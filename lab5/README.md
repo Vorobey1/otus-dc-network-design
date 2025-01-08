@@ -634,7 +634,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 11/11/14 ms
 ```
 **Client2 --> Client4**
 ```
-Client2#ping  FD00::5:4 source FD00::5:2
+Client2#ping FD00::5:4 source FD00::5:2
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to FD00::5:4, timeout is 2 seconds:
 Packet sent with a source address of FD00::5:2
