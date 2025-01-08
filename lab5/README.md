@@ -2,7 +2,8 @@
 ## План работ
 1. Собрать топологию сети CLOS
 2. Распределить адресное пространство для Underlay cети
-3. Настроить eBGP для Underlay/Overlay сети
+3. Настроить eBGP для Underlay
+4. Настроить VXLAN EVPN
 5. Конфигурация АСО
 6. Вывод show commands (show bgp evpn, show bgp evpn summaru, show vxlan vtep, show mac address-table)
 7. Тестирование связности между клиентами (ping)
@@ -46,6 +47,12 @@ Dn - Диапазон в зависимости от номера ЦОДа
 |Leaf3       |FD00:2:104/127|FD00:2:202/127|
 
 Адресация для клиентов
+|Device  |Ip-address   |
+|:------:|:-----------:|
+|Client1 |FD00::4:1/120|
+|Client2 |FD00::5:2/120|
+|Client3 |FD00::4:3/120|
+|Client4 |FD00::5:4/120|
 
 ## Настройка eBGP для Underlay сети
 При настройке eBGP в топологиях CLOS можно руководствоваться следующим рекомендациям:
