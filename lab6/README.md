@@ -549,7 +549,7 @@ VLANS                            Ip Address
 ## Тестирование L3 связности между клиентскими сетями
 **Client1 --> Client2**
 ```
-Client1#ping 10.5.0.1
+Client1#ping 10.5.0.1 so 10.4.0.1
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 10.5.0.1, timeout is 2 seconds:
 !!!!!
@@ -557,7 +557,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 13/29/95 ms
 ```
 **Client1 --> Client4**
 ```
-Client1#ping 10.5.0.2
+Client1#ping 10.5.0.2 so 10.4.0.1
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 10.5.0.2, timeout is 2 seconds:
 .!!!!
@@ -565,7 +565,7 @@ Success rate is 80 percent (4/5), round-trip min/avg/max = 17/18/19 ms
 ```
 **Client2 --> Client1**
 ```
-Client2#ping 10.4.0.1
+Client2#ping 10.4.0.1 so 10.5.0.1
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 10.4.0.1, timeout is 2 seconds:
 !!!!!
@@ -573,7 +573,7 @@ Success rate is 100 percent (5/5), round-trip min/avg/max = 13/14/16 ms
 ```
 **Client2 --> Client3**
 ```
-Client2#ping 10.4.0.2
+Client2#ping 10.4.0.2 so 10.5.0.1
 Type escape sequence to abort.
 Sending 5, 100-byte ICMP Echos to 10.4.0.2, timeout is 2 seconds:
 .!!!!
