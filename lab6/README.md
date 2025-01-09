@@ -92,22 +92,20 @@ hostname Spine1
 !
 interface Ethernet1
    no switchport
-   ipv6 address fd00::2:101/127
+   ip address 10.2.1.1/31
 !
 interface Ethernet2
    no switchport
-   ipv6 address fd00::2:103/127
+   ip address 10.2.1.3/31
 !
 interface Ethernet3
    no switchport
-   ipv6 address fd00::2:105/127
+   ip address 10.2.1.5/31
 !
 interface Loopback0
-   ipv6 address fd00::100/128
+   ip address 10.0.1.0/32
 !
-no ip routing
-!
-ipv6 unicast-routing
+ip routing
 !
 peer-filter LEAF_RANGE_ASN
    10 match as-range 4200000097-4200000099 result accept
@@ -117,7 +115,7 @@ router bgp 64086.60000
    router-id 10.0.1.0
    timers bgp 3 9
    maximum-paths 3
-   bgp listen range fd00::2:100/120 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   bgp listen range 10.2.1.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
    neighbor LEAF peer group
    neighbor LEAF bfd
    neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
@@ -126,8 +124,11 @@ router bgp 64086.60000
    address-family evpn
       neighbor LEAF activate
    !
-   address-family ipv6
+   address-family ipv4
       neighbor LEAF activate
+      network 10.0.1.0/32
+   !
+   address-family ipv6
       network fd00::100/128
 !
 ```
@@ -140,22 +141,20 @@ hostname Spine2
 !
 interface Ethernet1
    no switchport
-   ipv6 address fd00::2:201/127
+   ip address 10.2.2.1/31
 !
 interface Ethernet2
    no switchport
-   ipv6 address fd00::2:203/127
+   ip address 10.2.2.3/31
 !
 interface Ethernet3
    no switchport
-   ipv6 address fd00::2:205/127
+   ip address 10.2.2.5/31
 !
 interface Loopback0
-   ipv6 address fd00::200/128
+   ip address 10.0.2.0/32
 !
-no ip routing
-!
-ipv6 unicast-routing
+ip routing
 !
 peer-filter LEAF_RANGE_ASN
    10 match as-range 4200000097-4200000099 result accept
@@ -165,7 +164,7 @@ router bgp 64086.60000
    router-id 10.0.2.0
    timers bgp 3 9
    maximum-paths 3
-   bgp listen range fd00::2:200/120 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   bgp listen range 10.2.2.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
    neighbor LEAF peer group
    neighbor LEAF bfd
    neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
@@ -174,9 +173,9 @@ router bgp 64086.60000
    address-family evpn
       neighbor LEAF activate
    !
-   address-family ipv6
+   address-family ipv4
       neighbor LEAF activate
-      network fd00::200/128
+      network 10.0.2.0/32
 !
 ```
 **Leaf1**
@@ -189,34 +188,39 @@ hostname Leaf1
 vlan 10
    name SERVICE-1
 !
-vlan 20
-   name SERVICE-2
+vrf instance SERVICE-1
 !
 interface Ethernet1
    no switchport
-   ipv6 address fd00::2:100/127
+   ip address 10.2.1.0/31
 !
 interface Ethernet2
    no switchport
-   ipv6 address fd00::2:200/127
+   ip address 10.2.2.0/31
 !
 interface Ethernet8
    switchport access vlan 10
    spanning-tree portfast
 !
 interface Loopback0
-   ipv6 address fd00::1:1/128
+   ip address 10.0.0.1/32
+!
+interface Vlan10
+   vrf SERVICE-1
+   ip address 10.4.0.253/24
+   ip virtual-router address 10.4.0.254
 !
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
-   vxlan encapsulation ipv6
    vxlan vlan 10 vni 10010
-   vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE-1 vni 11010
+   vxlan learn-restrict any
 !
-no ip routing
+ip virtual-router mac-address 00:00:00:00:00:01
 !
-ipv6 unicast-routing
+ip routing
+ip routing vrf SERVICE-1
 !
 router bgp 64086.60001
    bgp asn notation asdot
@@ -227,25 +231,26 @@ router bgp 64086.60001
    neighbor SPINE bfd
    neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
    neighbor SPINE send-community extended
-   neighbor fd00::2:101 peer group SPINE
-   neighbor fd00::2:201 peer group SPINE
+   neighbor 10.2.1.1 peer group SPINE
+   neighbor 10.2.2.1 peer group SPINE
    !
    vlan 10
       rd auto
       route-target both 10:10010
       redistribute learned
    !
-   vlan 20
-      rd auto
-      route-target both 20:10020
-      redistribute learned
-   !
    address-family evpn
       neighbor SPINE activate
    !
-   address-family ipv6
+   address-family ipv4
       neighbor SPINE activate
-      network fd00::1:1/128
+      network 10.0.0.1/32
+   !
+   vrf SERVICE-1
+      rd 10.0.0.1:11010
+      route-target import evpn 20:11020
+      route-target export evpn 10:11010
+      redistribute connected
 !
 ```
 **Leaf2**
@@ -255,37 +260,42 @@ service routing protocols model multi-agent
 !
 hostname Leaf2
 !
-vlan 10
-   name SERVICE-1
-!
 vlan 20
    name SERVICE-2
 !
+vrf instance SERVICE-2
+!
 interface Ethernet1
    no switchport
-   ipv6 address fd00::2:102/127
+   ip address 10.2.1.2/31
 !
 interface Ethernet2
    no switchport
-   ipv6 address fd00::2:202/127
+   ip address 10.2.2.2/31
 !
 interface Ethernet8
    switchport access vlan 20
    spanning-tree portfast
 !
 interface Loopback0
-   ipv6 address fd00::1:2/128
+   ip address 10.0.0.2/32
+!
+interface Vlan20
+   vrf SERVICE-2
+   ip address 10.5.0.253/24
+   ip virtual-router address 10.5.0.254
 !
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
-   vxlan encapsulation ipv6
-   vxlan vlan 10 vni 10010
    vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE-2 vni 11020
+   vxlan learn-restrict any
 !
-no ip routing
+ip virtual-router mac-address 00:00:00:00:00:01
 !
-ipv6 unicast-routing
+ip routing
+ip routing vrf SERVICE-2
 !
 router bgp 64086.60002
    bgp asn notation asdot
@@ -296,13 +306,8 @@ router bgp 64086.60002
    neighbor SPINE bfd
    neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
    neighbor SPINE send-community extended
-   neighbor fd00::2:103 peer group SPINE
-   neighbor fd00::2:203 peer group SPINE
-   !
-   vlan 10
-      rd auto
-      route-target both 10:10010
-      redistribute learned
+   neighbor 10.2.1.3 peer group SPINE
+   neighbor 10.2.2.3 peer group SPINE
    !
    vlan 20
       rd auto
@@ -312,9 +317,15 @@ router bgp 64086.60002
    address-family evpn
       neighbor SPINE activate
    !
-   address-family ipv6
+   address-family ipv4
       neighbor SPINE activate
-      network fd00::1:2/128
+      network 10.0.0.2/32
+   !
+   vrf SERVICE-2
+      rd 10.0.0.2:11020
+      route-target import evpn 10:11010
+      route-target export evpn 20:11020
+      redistribute connected
 !
 ```
 **Leaf3**
@@ -330,13 +341,17 @@ vlan 10
 vlan 20
    name SERVICE-2
 !
+vrf instance SERVICE-1
+!
+vrf instance SERVICE-2
+!
 interface Ethernet1
    no switchport
-   ipv6 address fd00::2:104/127
+   ip address 10.2.1.4/31
 !
 interface Ethernet2
    no switchport
-   ipv6 address fd00::2:204/127
+   ip address 10.2.2.4/31
 !
 interface Ethernet7
    switchport access vlan 10
@@ -347,18 +362,34 @@ interface Ethernet8
    spanning-tree portfast
 !
 interface Loopback0
-   ipv6 address fd00::1:3/128
+   ip address 10.0.0.3/32
+!
+interface Management1
+!
+interface Vlan10
+   vrf SERVICE-1
+   ip address 10.4.0.252/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan20
+   vrf SERVICE-2
+   ip address 10.5.0.252/24
+   ip virtual-router address 10.5.0.254
 !
 interface Vxlan1
    vxlan source-interface Loopback0
    vxlan udp-port 4789
-   vxlan encapsulation ipv6
    vxlan vlan 10 vni 10010
    vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE-1 vni 11010
+   vxlan vrf SERVICE-2 vni 11020
+   vxlan learn-restrict any
 !
-no ip routing
+ip virtual-router mac-address 00:00:00:00:00:01
 !
-ipv6 unicast-routing
+ip routing
+ip routing vrf SERVICE-1
+ip routing vrf SERVICE-2
 !
 router bgp 64086.60003
    bgp asn notation asdot
@@ -369,8 +400,8 @@ router bgp 64086.60003
    neighbor SPINE bfd
    neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
    neighbor SPINE send-community extended
-   neighbor fd00::2:105 peer group SPINE
-   neighbor fd00::2:205 peer group SPINE
+   neighbor 10.2.1.5 peer group SPINE
+   neighbor 10.2.2.5 peer group SPINE
    !
    vlan 10
       rd auto
@@ -385,240 +416,160 @@ router bgp 64086.60003
    address-family evpn
       neighbor SPINE activate
    !
-   address-family ipv6
+   address-family ipv4
       neighbor SPINE activate
-      network fd00::1:3/128
+      network 10.0.0.3/32
+   !
+   vrf SERVICE-1
+      rd 10.0.0.3:11010
+      route-target import evpn 10:11010
+      route-target export evpn 20:11020
+      redistribute connected
+   !
+   vrf SERVICE-2
+      rd 10.0.0.3:11020
+      route-target import evpn 20:11020
+      route-target export evpn 10:11010
+      redistribute connected
 !
 ```
 ## Вывод show commands
 **Leaf1**
 ```
-Leaf1#show bgp evpn
+Leaf1#show bgp evpn route-type ip-prefix ipv4 
 BGP routing table information for VRF default
 Router identifier 10.0.0.1, local AS number 4200000097
-Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
-                    c - Contributing to ECMP, % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
           Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- *  ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- * >Ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- * >      RD: 10.0.0.1:10 imet fd00::1:1
+ * >      RD: 10.0.0.1:11010 ip-prefix 10.4.0.0/24
                                  -                     -       -       0       i
- * >      RD: 10.0.0.1:20 imet fd00::1:1
-                                 -                     -       -       0       i
- * >Ec    RD: 10.0.0.2:10 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- *  ec    RD: 10.0.0.2:10 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- * >Ec    RD: 10.0.0.2:20 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- *  ec    RD: 10.0.0.2:20 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- * >Ec    RD: 10.0.0.3:10 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:10 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- * >Ec    RD: 10.0.0.3:20 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:20 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
-Leaf1#show bgp evpn summary 
-BGP summary information for VRF default
-Router identifier 10.0.0.1, local AS number 64086.60001
-Neighbor Status Codes: m - Under maintenance
-  Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:101 4 64086.60000      1645      1658    0    0 00:12:24 Estab   6      6
-  fd00::2:201 4 64086.60000      1650      1660    0    0 00:12:25 Estab   6      6
-!
-Leaf1#show vxlan vtep
-Remote VTEPS for Vxlan1:
+ * >Ec    RD: 10.0.0.3:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.2:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.2              -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.2              -       100     0       64086.60000 64086.60002 i
+ * >Ec    RD: 10.0.0.3:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
 
-VTEP            Tunnel Type(s)
---------------- --------------
-fd00::1:2       flood, unicast         
-fd00::1:3       flood, unicast
-!
-Leaf1#show mac address-table
-          Mac Address Table
-------------------------------------------------------------------
+Leaf1#show ip route vrf SERVICE-1
 
-Vlan    Mac Address       Type        Ports      Moves   Last Move
-----    -----------       ----        -----      -----   ---------
-  10    5000.0006.8001    DYNAMIC     Et8        1       0:00:59 ago
-  10    5000.0008.8001    DYNAMIC     Vx1        1       0:00:59 ago
-  20    5000.0007.8001    DYNAMIC     Vx1        1       0:00:05 ago
-  20    5000.0009.8001    DYNAMIC     Vx1        1       0:00:05 ago
-Total Mac Addresses for this criterion: 4
-!
+VRF: SERVICE-1
+ C        10.4.0.0/24 is directly connected, Vlan10
+ B E      10.5.0.0/24 [200/0] via VTEP 10.0.0.2 VNI 11020 router-mac 50:00:00:03:37:66 local-interface Vxlan1
+
+Leaf1#show vxlan flood vtep 
+          VXLAN Flood VTEP Table
+--------------------------------------------------------------------------------
+VLANS                            Ip Address
+-----------------------------   ------------------------------------------------
+10                              10.0.0.3  
 ```
 **Leaf2**
 ```
-Leaf2#show bgp evpn 
+Leaf2#show bgp evpn route-type ip-prefix ipv4 
 BGP routing table information for VRF default
 Router identifier 10.0.0.2, local AS number 4200000098
-Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
-                    c - Contributing to ECMP, % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
           Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- *  ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- * >      RD: 10.0.0.2:20 mac-ip 5000.0007.8001
+ * >Ec    RD: 10.0.0.1:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.1              -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.1              -       100     0       64086.60000 64086.60001 i
+ * >Ec    RD: 10.0.0.3:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+ * >      RD: 10.0.0.2:11020 ip-prefix 10.5.0.0/24
                                  -                     -       -       0       i
- * >Ec    RD: 10.0.0.3:10 mac-ip 5000.0008.8001
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:10 mac-ip 5000.0008.8001
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- * >Ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:20 mac-ip 5000.0009.8001
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- * >Ec    RD: 10.0.0.1:10 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- *  ec    RD: 10.0.0.1:10 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- * >Ec    RD: 10.0.0.1:20 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- *  ec    RD: 10.0.0.1:20 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- * >      RD: 10.0.0.2:10 imet fd00::1:2
-                                 -                     -       -       0       i
- * >      RD: 10.0.0.2:20 imet fd00::1:2
-                                 -                     -       -       0       i
- * >Ec    RD: 10.0.0.3:10 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:10 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- * >Ec    RD: 10.0.0.3:20 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
- *  ec    RD: 10.0.0.3:20 imet fd00::1:3
-                                 fd00::1:3             -       100     0       64086.60000 64086.60003 i
-Leaf2#show bgp evpn summary 
-BGP summary information for VRF default
-Router identifier 10.0.0.2, local AS number 64086.60002
-Neighbor Status Codes: m - Under maintenance
-  Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:103 4 64086.60000      2119      2126    0    0 01:29:15 Estab   7      7
-  fd00::2:203 4 64086.60000      2118      2115    0    0 01:29:11 Estab   7      7
-Leaf2#show vxlan vtep 
-Remote VTEPS for Vxlan1:
+ * >Ec    RD: 10.0.0.3:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.3              -       100     0       64086.60000 64086.60003 i
+Leaf2#show ip route vrf SERVICE-2
 
-VTEP            Tunnel Type(s)
---------------- --------------
-fd00::1:3       flood, unicast
-fd00::1:1       flood, unicast
+VRF: SERVICE-2
+ B E      10.4.0.0/24 [200/0] via VTEP 10.0.0.1 VNI 11010 router-mac 50:00:00:d5:5d:c0 local-interface Vxlan1
+ C        10.5.0.0/24 is directly connected, Vlan20
 
-Total number of remote VTEPS:  2
-Leaf2#show mac address-table 
-          Mac Address Table
-------------------------------------------------------------------
-
-Vlan    Mac Address       Type        Ports      Moves   Last Move
-----    -----------       ----        -----      -----   ---------
-  10    5000.0006.8001    DYNAMIC     Vx1        1       0:02:45 ago
-  10    5000.0008.8001    DYNAMIC     Vx1        1       0:02:45 ago
-  20    5000.0007.8001    DYNAMIC     Et8        1       0:01:51 ago
-  20    5000.0009.8001    DYNAMIC     Vx1        1       0:01:51 ago
-Total Mac Addresses for this criterion: 4
+Leaf2#show vxlan flood vtep 
+          VXLAN Flood VTEP Table
+--------------------------------------------------------------------------------
+VLANS                            Ip Address
+-----------------------------   ------------------------------------------------
+20                              10.0.0.3 
 ```
 **Leaf3**
 ```
-Leaf3#show bgp evpn 
+Leaf3#show bgp evpn route-type ip-prefix ipv4
 BGP routing table information for VRF default
 Router identifier 10.0.0.3, local AS number 4200000099
-Route status codes: * - valid, > - active, S - Stale, E - ECMP head, e - ECMP
-                    c - Contributing to ECMP, % - Pending BGP convergence
-Origin codes: i - IGP, e - EGP, ? - incomplete
-AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Link Local Nexthop
 
           Network                Next Hop              Metric  LocPref Weight  Path
- * >Ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- *  ec    RD: 10.0.0.1:10 mac-ip 5000.0006.8001
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- * >Ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- *  ec    RD: 10.0.0.2:20 mac-ip 5000.0007.8001
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- * >      RD: 10.0.0.3:10 mac-ip 5000.0008.8001
+ * >Ec    RD: 10.0.0.1:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.1              -       100     0       64086.60000 64086.60001 i
+ *  ec    RD: 10.0.0.1:11010 ip-prefix 10.4.0.0/24
+                                 10.0.0.1              -       100     0       64086.60000 64086.60001 i
+ * >      RD: 10.0.0.3:11010 ip-prefix 10.4.0.0/24
                                  -                     -       -       0       i
- * >      RD: 10.0.0.3:20 mac-ip 5000.0009.8001
+ * >Ec    RD: 10.0.0.2:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.2              -       100     0       64086.60000 64086.60002 i
+ *  ec    RD: 10.0.0.2:11020 ip-prefix 10.5.0.0/24
+                                 10.0.0.2              -       100     0       64086.60000 64086.60002 i
+ * >      RD: 10.0.0.3:11020 ip-prefix 10.5.0.0/24
                                  -                     -       -       0       i
- * >Ec    RD: 10.0.0.1:10 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- *  ec    RD: 10.0.0.1:10 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- * >Ec    RD: 10.0.0.1:20 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- *  ec    RD: 10.0.0.1:20 imet fd00::1:1
-                                 fd00::1:1             -       100     0       64086.60000 64086.60001 i
- * >Ec    RD: 10.0.0.2:10 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- *  ec    RD: 10.0.0.2:10 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- * >Ec    RD: 10.0.0.2:20 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- *  ec    RD: 10.0.0.2:20 imet fd00::1:2
-                                 fd00::1:2             -       100     0       64086.60000 64086.60002 i
- * >      RD: 10.0.0.3:10 imet fd00::1:3
-                                 -                     -       -       0       i
- * >      RD: 10.0.0.3:20 imet fd00::1:3
-                                 -                     -       -       0       i
-Leaf3#show bgp evpn summary
-BGP summary information for VRF default
-Router identifier 10.0.0.3, local AS number 64086.60003
-Neighbor Status Codes: m - Under maintenance
-  Neighbor    V AS           MsgRcvd   MsgSent  InQ OutQ  Up/Down State   PfxRcd PfxAcc
-  fd00::2:105 4 64086.60000       743       741    0    0 00:30:31 Estab   6      6
-  fd00::2:205 4 64086.60000       735       736    0    0 00:30:31 Estab   6      6
-Leaf3#show vxlan vtep 
-Remote VTEPS for Vxlan1:
+Leaf3#show ip route vrf all
 
-VTEP            Tunnel Type(s)
---------------- --------------
-fd00::1:2       unicast, flood
-fd00::1:1       unicast, flood
+VRF: SERVICE-1
+ C        10.4.0.0/24 is directly connected, Vlan10
+ B L      10.5.0.0/24 is directly connected (source VRF SERVICE-2), Vlan20 (egress VRF SERVICE-2)
 
-Total number of remote VTEPS:  2
-Leaf3#show mac address-table 
-          Mac Address Table
-------------------------------------------------------------------
+VRF: SERVICE-2
+ B L      10.4.0.0/24 is directly connected (source VRF SERVICE-1), Vlan10 (egress VRF SERVICE-1)
+ C        10.5.0.0/24 is directly connected, Vlan20
 
-Vlan    Mac Address       Type        Ports      Moves   Last Move
-----    -----------       ----        -----      -----   ---------
-  10    5000.0006.8001    DYNAMIC     Vx1        1       0:03:38 ago
-  10    5000.0008.8001    DYNAMIC     Et7        1       0:03:38 ago
-  20    5000.0007.8001    DYNAMIC     Vx1        1       0:02:44 ago
-  20    5000.0009.8001    DYNAMIC     Et8        1       0:02:44 ago
-Total Mac Addresses for this criterion: 4
+Leaf3#show vxlan flood vtep 
+          VXLAN Flood VTEP Table
+--------------------------------------------------------------------------------
+VLANS                            Ip Address
+-----------------------------   ------------------------------------------------
+10                              10.0.0.1       
+20                              10.0.0.2 
 ```
-## Тестирование L2 связности между клиентами
-**Client1 --> Client3**
+## Тестирование L3 связности между клиентскими сетями
+**Client1 --> Client2**
 ```
-Client1#ping FD00::4:3 source FD00::4:1
+Client1#ping 10.5.0.1
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to FD00::4:3, timeout is 2 seconds:
-Packet sent with a source address of FD00::4:1
+Sending 5, 100-byte ICMP Echos to 10.5.0.1, timeout is 2 seconds:
 !!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 11/11/14 ms
+Success rate is 100 percent (5/5), round-trip min/avg/max = 13/29/95 ms
 ```
-**Client2 --> Client4**
+**Client1 --> Client4**
 ```
-Client2#ping FD00::5:4 source FD00::5:2
+Client1#ping 10.5.0.2
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to FD00::5:4, timeout is 2 seconds:
-Packet sent with a source address of FD00::5:2
+Sending 5, 100-byte ICMP Echos to 10.5.0.2, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 17/18/19 ms
+```
+**Client2 --> Client1**
+```
+Client2#ping 10.4.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.4.0.1, timeout is 2 seconds:
 !!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 10/11/15 ms
+Success rate is 100 percent (5/5), round-trip min/avg/max = 13/14/16 ms
+```
+**Client2 --> Client3**
+```
+Client2#ping 10.4.0.2
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.4.0.2, timeout is 2 seconds:
+.!!!!
+Success rate is 80 percent (4/5), round-trip min/avg/max = 16/17/19 ms
 ```
