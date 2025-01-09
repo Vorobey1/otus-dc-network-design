@@ -65,31 +65,28 @@ interface Vlan10
 interface Vlan20
    ip virtual-router address 10.5.0.254
 ```
-В существующем NVE на VTEP свяжем VRF c VNI
+В существующем NVE на VTEP связываем VRF c VNI
 ```
 interface Vxlan1
    vxlan vrf SERVICE-1 vni 11010
    vxlan vrf SERVICE-2 vni 11020
 ```
-В BGP на Leaf и Spine добавляем возможность пересылки extended community и активируем AF EVPN
+На VTEP создаем EVPN Instance (EVI) для VRF: указываем RD, RT, влючем редистрибуцию connected интерфейсов
 ```
 router bgp ASN
-neighbor NEIGHBOR send-community extended
-   address-family evpn
-      neighbor NEIGHBOR activate
+   vrf SERVICE-1
+      rd 10.0.0.3:11010
+      route-target import evpn 10:11010
+      route-target export evpn 20:11020
+      redistribute connected
+   !
+   vrf SERVICE-2
+      rd 10.0.0.3:11020
+      route-target import evpn 20:11020
+      route-target export evpn 10:11010
+      redistribute connected
 ```
-На VTEP создаем EVPN Instance (EVI): указываем RD, RT, включаем анонс MAC-адресов
-```
-router bgp ASN
-   vlan 10
-      rd auto
-      route-target both 10:10010
-      redistribute learned
-   vlan 20
-      rd auto
-      route-target both 20:10020
-      redistribute learned
-```
+При выполнении данных действий в BGP должны появиться NLRI EVPN Type-5 (ip-prefix route), которые как раз и создают сервис L3 VNI между нашими клиентами в vrf SERVICE-1 и SERVICE-2
 
 ## Конфигурация АСО
 **Spine1**
