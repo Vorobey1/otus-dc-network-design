@@ -71,7 +71,7 @@ interface Vxlan1
    vxlan vrf SERVICE-1 vni 11010
    vxlan vrf SERVICE-2 vni 11020
 ```
-На VTEP создаем EVPN Instance (EVI) для VRF: указываем RD, RT, влючем редистрибуцию connected интерфейсов
+На VTEP создаем EVPN Instance (EVI) для VRF: указываем RD, RT, влючем редистрибуцию connected сетей
 ```
 router bgp ASN
    vrf SERVICE-1
