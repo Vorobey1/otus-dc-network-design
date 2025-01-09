@@ -55,6 +55,14 @@ interface Vlan10
 interface Vlan20
    vrf SERVICE-2
 ```
+Настраиваем virtual-mac и virtual-ip для общего использования шлюза на VTEP
+```
+ip virtual-router mac-address 00:00:00:00:00:01
+interface Vlan10
+   ip virtual-router address 10.4.0.254
+interface Vlan20
+   ip virtual-router address 10.5.0.254
+```
 Создаем NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
 ```
 interface Vxlan1
