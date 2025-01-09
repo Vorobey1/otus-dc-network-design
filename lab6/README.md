@@ -46,7 +46,7 @@
 Для упрощения конфигурации использовал peer groups. На Spine для автообнаружения соседей использовал bgp listen 
 
 ## Настройка VXLAN EVPN c L3VNI
-Настраиваем VRF instance на Leaf (VTEP) и соотносим int vlan 10, vlan 20 c vrf SERVICE-1, SERVICE-2 соответственно
+Настраиваем VRF instance на Leaf (VTEP) и соотносим int vlan 10, vlan 20 c vrf SERVICE-1, SERVICE-2 соответственно. Включаем routing для vrf
 ```
 vrf instance SERVICE-1
 vrf instance SERVICE-2
@@ -54,6 +54,8 @@ interface Vlan10
    vrf SERVICE-1
 interface Vlan20
    vrf SERVICE-2
+ip routing vrf SERVICE-1
+ip routing vrf SERVICE-2
 ```
 Настраиваем virtual-mac и virtual-ip для общего использования шлюза на VTEP
 ```
@@ -63,14 +65,11 @@ interface Vlan10
 interface Vlan20
    ip virtual-router address 10.5.0.254
 ```
-Создаем NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
+В существующем NVE на VTEP свяжем VRF c VNI
 ```
 interface Vxlan1
-   vxlan source-interface Loopback0
-   vxlan udp-port 4789
-   vxlan encapsulation ipv6
-   vxlan vlan 10 vni 10010
-   vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE-1 vni 11010
+   vxlan vrf SERVICE-2 vni 11020
 ```
 В BGP на Leaf и Spine добавляем возможность пересылки extended community и активируем AF EVPN
 ```
