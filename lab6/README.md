@@ -46,12 +46,14 @@
 Для упрощения конфигурации использовал peer groups. На Spine для автообнаружения соседей использовал bgp listen 
 
 ## Настройка VXLAN EVPN c L3VNI
-Настраиваем VLAN 10,20 на всех Leaf (VTEP)
+Настраиваем VRF instance на Leaf (VTEP) и соотносим int vlan 10, vlan 20 c vrf SERVICE-1, SERVICE-2 соответственно
 ```
-vlan 10
-   name SERVICE-1
-vlan 20
-   name SERVICE-2
+vrf instance SERVICE-1
+vrf instance SERVICE-2
+interface Vlan10
+   vrf SERVICE-1
+interface Vlan20
+   vrf SERVICE-2
 ```
 Создаем NVE (туннельные интерфейс для инкапсуляции/декапсуляции фреймов) на VTEP с использованием ipv6 и свяжем VLAN c VNI
 ```
