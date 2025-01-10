@@ -73,7 +73,6 @@ router bgp ASN
       route-target export evpn 1:1
       redistribute connected
 ```
-При выполнении данных действий в BGP должны появиться NLRI EVPN Type-5 (ip-prefix route), которые как раз и создают сервис L3 VNI между нашими клиентами в vrf SERVICE-1 и SERVICE-2
 
 ## Конфигурация АСО
 **Spine1**
