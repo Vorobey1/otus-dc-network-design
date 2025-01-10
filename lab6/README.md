@@ -59,11 +59,10 @@ ip virtual-router mac-address 00:00:00:00:00:01
 interface Vlan[10,20,30,40]
    ip virtual-router address 10.4.[0,1,2,3].254
 ```
-В существующем NVE на VTEP связываем VRF c VNI
+В существующем NVE на всех VTEP связываем VRF c VNI
 ```
 interface Vxlan1
-   vxlan vrf SERVICE-1 vni 11010
-   vxlan vrf SERVICE-2 vni 11020
+   vxlan vrf SERVICE vni 10000
 ```
 На VTEP создаем EVPN Instance (EVI) для VRF: указываем RD, RT, влючем редистрибуцию connected сетей
 ```
