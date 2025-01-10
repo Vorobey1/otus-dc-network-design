@@ -10,7 +10,7 @@
 ## Топология сети CLOS
 Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
 
-![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab6/screenshots/Topology.PNG1)
+![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab6/screenshots/Topology.PNG)
 ## Адресное пространство для сети
 Адресацию для АСО я переиспользовал из работы "[Проектирование адресного пространства](https://github.com/Vorobey1/otus-dc-network-design/edit/main/lab1/README.md)".
 
