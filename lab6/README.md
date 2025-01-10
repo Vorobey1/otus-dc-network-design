@@ -67,16 +67,10 @@ interface Vxlan1
 На VTEP создаем EVPN Instance (EVI) для VRF: указываем RD, RT, влючем редистрибуцию connected сетей
 ```
 router bgp ASN
-   vrf SERVICE-1
-      rd 10.0.0.3:11010
-      route-target import evpn 10:11010
-      route-target export evpn 20:11020
-      redistribute connected
-   !
-   vrf SERVICE-2
-      rd 10.0.0.3:11020
-      route-target import evpn 20:11020
-      route-target export evpn 10:11010
+   vrf SERVICE
+      rd 10.0.0.Ln:10000
+      route-target import evpn 1:1
+      route-target export evpn 1:1
       redistribute connected
 ```
 При выполнении данных действий в BGP должны появиться NLRI EVPN Type-5 (ip-prefix route), которые как раз и создают сервис L3 VNI между нашими клиентами в vrf SERVICE-1 и SERVICE-2
