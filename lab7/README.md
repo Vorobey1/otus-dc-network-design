@@ -26,12 +26,29 @@
 
 ## Настройка ESI-LAG
 На Leaf1 и Leaf2 настроим ESI-LAG для Client1 и Client2.  
-Соотнесем физические интерфесы с port-channel.
+Соотнесем физические интерфесы с port-channel
 ```
 interface Ethernet7
    channel-group 1 mode active
 interface Ethernet8
    channel-group 2 mode active
+```
+Настроим port-channel
+```
+interface Port-Channel1
+   description Client1
+   switchport access vlan 10
+   evpn ethernet-segment
+      identifier 0011:1111:1111:1111:1111
+      route-target import 11:11:11:11:11:11
+   lacp system-id 1111.1111.1111
+interface Port-Channel2
+   description Client2
+   switchport access vlan 11
+   evpn ethernet-segment
+      identifier 0022:2222:2222:2222:2222
+      route-target import 22:22:22:22:22:22
+   lacp system-id 2222.2222.2222
 ```
 ## Настройка MLAG
 
