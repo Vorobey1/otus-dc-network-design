@@ -25,6 +25,7 @@
 |Client4 |10.4.3.1/24 |
 
 ## Настройка ESI-LAG
+На Leaf1 и Leaf2 настроем ESI-LAG для Client1 и Client2. 
 
 ## Настройка MLAG
 
