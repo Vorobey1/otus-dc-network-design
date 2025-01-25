@@ -50,6 +50,76 @@ interface Port-Channel2
       route-target import 22:22:22:22:22:22
    lacp system-id 2222.2222.2222
 ```
+После данной настройки Leaf1 и Leaf2 начнут отправлять EVPN сообщения 1 и 4 типов
+EVPN route-type 4
+```
+Spine2#show bgp evpn route-type ethernet-segment detail
+BGP routing table information for VRF default
+Router identifier 10.0.2.0, local AS number 4200000096
+BGP routing table entry for ethernet-segment 0011:1111:1111:1111:1111 10.0.0.1, Route Distinguisher: 10.0.0.1:1
+ Paths: 1 available
+  64086.60001
+    10.0.0.1 from 10.2.2.0 (10.0.0.1)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: TunnelEncap:tunnelTypeVxlan EvpnEsImportRt:11:11:11:11:11:11
+BGP routing table entry for ethernet-segment 0011:1111:1111:1111:1111 10.0.0.2, Route Distinguisher: 10.0.0.2:1
+ Paths: 1 available
+  64086.60002
+    10.0.0.2 from 10.2.2.2 (10.0.0.2)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: TunnelEncap:tunnelTypeVxlan EvpnEsImportRt:11:11:11:11:11:11
+BGP routing table entry for ethernet-segment 0022:2222:2222:2222:2222 10.0.0.1, Route Distinguisher: 10.0.0.1:1
+ Paths: 1 available
+  64086.60001
+    10.0.0.1 from 10.2.2.0 (10.0.0.1)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: TunnelEncap:tunnelTypeVxlan EvpnEsImportRt:22:22:22:22:22:22
+BGP routing table entry for ethernet-segment 0022:2222:2222:2222:2222 10.0.0.2, Route Distinguisher: 10.0.0.2:1
+ Paths: 1 available
+  64086.60002
+    10.0.0.2 from 10.2.2.2 (10.0.0.2)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: TunnelEncap:tunnelTypeVxlan EvpnEsImportRt:22:22:22:22:22:22
+```
+Данный тип сообщения позволяет выбрать назначенного отравителя для каждого EVI
+```
+
+Leaf1#show bgp evpn instance 
+EVPN instance: VLAN 10
+  Route distinguisher: 0:0
+  Route target import: Route-Target-AS:10:10010
+  Route target export: Route-Target-AS:10:10010
+  Service interface: VLAN-based
+  Local VXLAN IP address: 10.0.0.1
+  VXLAN: enabled
+  MPLS: disabled
+  Local ethernet segment:
+    ESI: 0011:1111:1111:1111:1111
+      Interface: Port-Channel1
+      Mode: all-active
+      State: up
+      ES-Import RT: 11:11:11:11:11:11
+      DF election algorithm: modulus
+      Designated forwarder: 10.0.0.1
+      Non-Designated forwarder: 10.0.0.2
+EVPN instance: VLAN 11
+  Route distinguisher: 0:0
+  Route target import: Route-Target-AS:11:10011
+  Route target export: Route-Target-AS:11:10011
+  Service interface: VLAN-based
+  Local VXLAN IP address: 10.0.0.1
+  VXLAN: enabled
+  MPLS: disabled
+  Local ethernet segment:
+    ESI: 0022:2222:2222:2222:2222
+      Interface: Port-Channel2
+      Mode: all-active
+      State: up
+      ES-Import RT: 22:22:22:22:22:22
+      DF election algorithm: modulus
+      Designated forwarder: 10.0.0.2
+      Non-Designated forwarder: 10.0.0.1
+```
 ## Настройка MLAG
 
 ## Конфигурация АСО
