@@ -154,6 +154,39 @@ BGP routing table entry for auto-discovery 0 0022:2222:2222:2222:2222, Route Dis
       Extended Community: Route-Target-AS:11:10011 TunnelEncap:tunnelTypeVxlan
       VNI: 10011
 ```
+Благодаря данным маршрутам можно получить L2 и L3 ECMP
+L2 ECMP
+```
+Leaf4#show vxlan address-table
+          Vxlan Mac Address Table
+----------------------------------------------------------------------
+VLAN  Mac Address     Type      Prt  VTEP             Moves   Last Move
+----  -----------     ----      ---  ----             -----   ---------
+  10  5000.0006.8001  EVPN      Vx1  10.0.0.1         1       0:00:02 ago
+                                     10.0.0.2
+```
+L3 ECMP
+```
+Leaf4#show ip route vrf SERVICE
+VRF: SERVICE
+ B E      10.4.0.1/32 [200/0] via VTEP 10.0.0.2 VNI 10000 router-mac 50:00:00:03:37:66 local-interface Vxlan1
+                              via VTEP 10.0.0.1 VNI 10000 router-mac 50:00:00:d5:5d:c0 local-interface Vxlan1
+```
+Для L3 ECMP нужны еще маршруты mac-ip, но Leaf1 делает их анонс при помощи route-type 1 на что указывает **EvpnNdFlags:pflag**
+```
+BGP routing table entry for mac-ip 5000.0006.8001 10.4.0.1, Route Distinguisher: 10.0.0.1:10
+  64086.60000 64086.60001
+    10.0.0.1 from 10.2.1.7 (10.0.1.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:1:1 Route-Target-AS:10:10010 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:50:00:00:d5:5d:c0 EvpnNdFlags:pflag
+      VNI: 10010 L3 VNI: 10000 ESI: 0011:1111:1111:1111:1111
+BGP routing table entry for mac-ip 5000.0006.8001 10.4.0.1, Route Distinguisher: 10.0.0.2:10
+  64086.60000 64086.60002
+    10.0.0.2 from 10.2.2.7 (10.0.2.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:1:1 Route-Target-AS:10:10010 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:50:00:00:03:37:66
+      VNI: 10010 L3 VNI: 10000 ESI: 0011:1111:1111:1111:1111
+```
 ## Настройка MLAG
 
 ## Конфигурация АСО
