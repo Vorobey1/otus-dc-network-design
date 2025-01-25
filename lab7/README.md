@@ -120,6 +120,40 @@ EVPN instance: VLAN 11
       Designated forwarder: 10.0.0.2
       Non-Designated forwarder: 10.0.0.1
 ```
+EVPN route-type 1  
+```
+Spine2#show bgp evpn route-type auto-discovery detail 
+BGP routing table information for VRF default
+Router identifier 10.0.2.0, local AS number 4200000096
+BGP routing table entry for auto-discovery 0 0011:1111:1111:1111:1111, Route Distinguisher: 10.0.0.1:10
+ Paths: 1 available
+  64086.60001
+    10.0.0.1 from 10.2.2.0 (10.0.0.1)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: Route-Target-AS:10:10010 TunnelEncap:tunnelTypeVxlan
+      VNI: 10010
+BGP routing table entry for auto-discovery 0 0011:1111:1111:1111:1111, Route Distinguisher: 10.0.0.2:10
+ Paths: 1 available
+  64086.60002
+    10.0.0.2 from 10.2.2.2 (10.0.0.2)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: Route-Target-AS:10:10010 TunnelEncap:tunnelTypeVxlan
+      VNI: 10010
+BGP routing table entry for auto-discovery 0 0022:2222:2222:2222:2222, Route Distinguisher: 10.0.0.1:11
+ Paths: 1 available
+  64086.60001
+    10.0.0.1 from 10.2.2.0 (10.0.0.1)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: Route-Target-AS:11:10011 TunnelEncap:tunnelTypeVxlan
+      VNI: 10011
+BGP routing table entry for auto-discovery 0 0022:2222:2222:2222:2222, Route Distinguisher: 10.0.0.2:11
+ Paths: 1 available
+  64086.60002
+    10.0.0.2 from 10.2.2.2 (10.0.0.2)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
+      Extended Community: Route-Target-AS:11:10011 TunnelEncap:tunnelTypeVxlan
+      VNI: 10011
+```
 ## Настройка MLAG
 
 ## Конфигурация АСО
