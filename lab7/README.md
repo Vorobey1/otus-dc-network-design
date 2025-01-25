@@ -50,7 +50,7 @@ interface Port-Channel2
       route-target import 22:22:22:22:22:22
    lacp system-id 2222.2222.2222
 ```
-После данной настройки Leaf1 и Leaf2 начнут отправлять EVPN сообщения 1 и 4 типов
+После данной настройки Leaf1 и Leaf2 начнут отправлять EVPN сообщения 1 и 4 типов  
 EVPN route-type 4
 ```
 Spine2#show bgp evpn route-type ethernet-segment detail
@@ -81,7 +81,7 @@ BGP routing table entry for ethernet-segment 0022:2222:2222:2222:2222 10.0.0.2, 
       Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, best
       Extended Community: TunnelEncap:tunnelTypeVxlan EvpnEsImportRt:22:22:22:22:22:22
 ```
-Данный тип сообщения позволяет выбрать назначенного отравителя для каждого EVI
+Данный тип сообщений позволяет выбрать назначенного отравителя для каждого EVI
 ```
 
 Leaf1#show bgp evpn instance 
