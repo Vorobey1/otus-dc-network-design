@@ -27,7 +27,12 @@
 ## Настройка ESI-LAG
 На Leaf1 и Leaf2 настроим ESI-LAG для Client1 и Client2. 
 Соотнесем физические интерфесы с port-channel.
-
+```
+interface Ethernet7
+   channel-group 1 mode active
+interface Ethernet8
+   channel-group 2 mode active
+```
 ## Настройка MLAG
 
 ## Конфигурация АСО
