@@ -154,7 +154,7 @@ BGP routing table entry for auto-discovery 0 0022:2222:2222:2222:2222, Route Dis
       Extended Community: Route-Target-AS:11:10011 TunnelEncap:tunnelTypeVxlan
       VNI: 10011
 ```
-Благодаря данным маршрутам можно получить L2 и L3 ECMP
+Благодаря данным маршрутам можно получить L2 и L3 ECMP  
 L2 ECMP
 ```
 Leaf4#show vxlan address-table
