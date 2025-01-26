@@ -188,6 +188,33 @@ BGP routing table entry for mac-ip 5000.0006.8001 10.4.0.1, Route Distinguisher:
       VNI: 10010 L3 VNI: 10000 ESI: 0011:1111:1111:1111:1111
 ```
 ## Настройка MLAG
+На Leaf3 и Leaf4 настроим MLAG для клиентов Client3 и Client4  
+Создадим VLAN и SVI для пиринга MLAG Member, а также настроим Peer Link
+```
+vlan 4094
+   name MLAG
+   trunk group MLAGPEER
+interface Vlan4094
+   description MLAG Peer Sync
+   no autostate
+   ip address <ip для пиринга>
+interface Ethernet4
+   channel-group 1000 mode active
+interface Ethernet5
+   channel-group 1000 mode active
+interface Port-Channel1000
+   description MLAG Peer-Link
+   switchport mode trunk
+   switchport trunk group MLAGPEER
+```
+Создадим MLAG Domain
+```
+mlag configuration
+   domain-id 1000
+   local-interface Vlan4094
+   peer-address 192.168.0.1
+   peer-link Port-Channel1000
+```
 
 ## Конфигурация АСО
 
