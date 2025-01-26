@@ -324,8 +324,6 @@ service routing protocols model multi-agent
 !
 hostname Spine1
 !
-spanning-tree mode mstp
-!
 interface Ethernet1
    no switchport
    ip address 10.2.1.1/31
@@ -375,12 +373,272 @@ end
 ```
 **Spine2**
 ```
+!
+service routing protocols model multi-agent
+!
+hostname Spine2
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.2.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.2.2.5/31
+!
+interface Ethernet4
+   no switchport
+   ip address 10.2.2.7/31
+!
+interface Loopback0
+   ip address 10.0.2.0/32
+!
+ip routing
+!
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000097-4200000100 result accept
+!
+router bgp 64086.60000
+   bgp asn notation asdot
+   router-id 10.0.2.0
+   timers bgp 3 9
+   maximum-paths 3
+   bgp listen range 10.2.2.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      neighbor LEAF activate
+      network 10.0.2.0/32
+!
+end
 ```
 **Leaf1**
 ```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf1
+!
+vlan 10-11
+!
+vrf instance SERVICE
+!
+interface Port-Channel1
+   description Client1
+   switchport access vlan 10
+   !
+   evpn ethernet-segment
+      identifier 0011:1111:1111:1111:1111
+      route-target import 11:11:11:11:11:11
+   lacp system-id 1111.1111.1111
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel2
+   description client2
+   switchport access vlan 11
+   !
+   evpn ethernet-segment
+      identifier 0022:2222:2222:2222:2222
+      route-target import 22:22:22:22:22:22
+   lacp system-id 2222.2222.2222
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.0/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.0/31
+!
+interface Ethernet7
+   channel-group 1 mode active
+!
+interface Ethernet8
+   channel-group 2 mode active
+!
+interface Loopback0
+   ip address 10.0.0.1/32
+!
+interface Vlan10
+   vrf SERVICE
+   ip address 10.4.0.253/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf SERVICE
+   ip address 10.4.1.253/24
+   ip virtual-router address 10.4.1.254
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vrf SERVICE vni 10000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf SERVICE
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.0.1
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.1 peer group SPINE
+   neighbor 10.2.2.1 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.1/32
+   !
+   vrf SERVICE
+      rd 10.0.0.1:10000
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+!
+end
 ```
 **Leaf2**
 ```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf2
+!
+vlan 10-11
+!
+vrf instance SERVICE
+!
+interface Port-Channel1
+   description Client1
+   switchport access vlan 10
+   !
+   evpn ethernet-segment
+      identifier 0011:1111:1111:1111:1111
+      route-target import 11:11:11:11:11:11
+   lacp system-id 1111.1111.1111
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel2
+   description client2
+   switchport access vlan 11
+   !
+   evpn ethernet-segment
+      identifier 0022:2222:2222:2222:2222
+      route-target import 22:22:22:22:22:22
+   lacp system-id 2222.2222.2222
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.2/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.2/31
+!
+interface Ethernet7
+   channel-group 1 mode active
+!
+interface Ethernet8
+   channel-group 2 mode active
+!
+interface Loopback0
+   ip address 10.0.0.2/32
+!
+interface Vlan10
+   vrf SERVICE
+   ip address 10.4.0.252/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf SERVICE
+   ip address 10.4.1.252/24
+   ip virtual-router address 10.4.1.254
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vrf SERVICE vni 10000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf SERVICE
+!
+router bgp 64086.60002
+   bgp asn notation asdot
+   router-id 10.0.0.2
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.3 peer group SPINE
+   neighbor 10.2.2.3 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.2/32
+   !
+   vrf SERVICE
+      rd 10.0.0.2:10000
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+!
+end
 ```
 **Leaf3**
 ```
