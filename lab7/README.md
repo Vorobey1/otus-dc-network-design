@@ -642,9 +642,305 @@ end
 ```
 **Leaf3**
 ```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf3
+!
+no spanning-tree vlan-id 4094
+!
+vlan 10,20
+!
+vlan 4093
+   name iBGP
+!
+vlan 4094
+   name MLAG
+   trunk group MLAGPEER
+!
+vrf instance SERVICE
+!
+interface Port-Channel3
+   description Client3
+   switchport access vlan 10
+   mlag 3
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel4
+   description Client4
+   switchport access vlan 20
+   mlag 4
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel1000
+   description MLAG Peer-Link
+   switchport mode trunk
+   switchport trunk group MLAGPEER
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.4/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.4/31
+!
+interface Ethernet4
+   channel-group 1000 mode active
+!
+interface Ethernet5
+   channel-group 1000 mode active
+!
+interface Ethernet7
+   channel-group 3 mode active
+!
+interface Ethernet8
+   channel-group 4 mode active
+!
+interface Loopback0
+   ip address 10.0.0.3/32
+!
+interface Loopback1
+   ip address 10.1.3.4/32
+!
+interface Vlan10
+   vrf SERVICE
+   ip address 10.4.0.250/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan20
+   vrf SERVICE
+   ip address 10.4.2.253/24
+   ip virtual-router address 10.4.2.254
+!
+interface Vlan4093
+   description iBGP Peer
+   no autostate
+   ip address 192.168.0.5/30
+!
+interface Vlan4094
+   description MLAG Peer Sync
+   no autostate
+   ip address 192.168.0.1/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE vni 10000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf SERVICE
+!
+mlag configuration
+   domain-id 1000
+   local-interface Vlan4094
+   peer-address 192.168.0.2
+   peer-link Port-Channel1000
+!
+router bgp 64086.60003
+   bgp asn notation asdot
+   router-id 10.0.0.3
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor iBGP peer group
+   neighbor iBGP remote-as 64086.60003
+   neighbor iBGP next-hop-peer
+   neighbor iBGP password 7 5BBwhtJStX06PzD9rDdhHg==
+   neighbor iBGP send-community extended
+   neighbor 10.2.1.5 peer group SPINE
+   neighbor 10.2.2.5 peer group SPINE
+   neighbor 192.168.0.6 peer group iBGP
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      route-target both 10:10020
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+      neighbor iBGP activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      neighbor iBGP activate
+      network 10.0.0.3/32
+      network 10.1.3.4/32
+   !
+   vrf SERVICE
+      rd 10.0.0.3:10000
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+!
+end
 ```
 **Leaf4**
 ```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf4
+!
+no spanning-tree vlan-id 4094
+!
+vlan 10,20
+!
+vlan 4093
+   name iBGP
+!
+vlan 4094
+   name MLAG
+   trunk group MLAGPEER
+!
+vrf instance SERVICE
+!
+interface Port-Channel3
+   description Client3
+   switchport access vlan 10
+   mlag 3
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel4
+   description Client4
+   switchport access vlan 20
+   mlag 4
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel1000
+   description MLAG Peer-Link
+   switchport mode trunk
+   switchport trunk group MLAGPEER
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.6/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.6/31
+!
+interface Ethernet4
+   channel-group 1000 mode active
+!
+interface Ethernet5
+   channel-group 1000 mode active
+!
+interface Ethernet7
+   channel-group 3 mode active
+!
+interface Ethernet8
+   channel-group 4 mode active
+!
+interface Loopback0
+   ip address 10.0.0.4/32
+!
+interface Loopback1
+   ip address 10.1.3.4/32
+!
+interface Vlan10
+   no autostate
+   vrf SERVICE
+   ip address 10.4.0.251/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan20
+   vrf SERVICE
+   ip address 10.4.2.252/24
+   ip virtual-router address 10.4.2.254
+!
+interface Vlan4093
+   description iBGP Peer
+   no autostate
+   ip address 192.168.0.6/30
+!
+interface Vlan4094
+   description MLAG Peer Sync
+   no autostate
+   ip address 192.168.0.2/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE vni 10000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf SERVICE
+!
+mlag configuration
+   domain-id 1000
+   local-interface Vlan4094
+   peer-address 192.168.0.1
+   peer-link Port-Channel1000
+!
+router bgp 64086.60003
+   bgp asn notation asdot
+   router-id 10.0.0.4
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor iBGP peer group
+   neighbor iBGP remote-as 64086.60003
+   neighbor iBGP next-hop-peer
+   neighbor iBGP password 7 5BBwhtJStX06PzD9rDdhHg==
+   neighbor iBGP send-community extended
+   neighbor 10.2.1.7 peer group SPINE
+   neighbor 10.2.2.7 peer group SPINE
+   neighbor 192.168.0.5 peer group iBGP
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+      neighbor iBGP activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      neighbor iBGP activate
+      network 10.0.0.4/32
+      network 10.1.3.4/32
+   !
+   vrf SERVICE
+      rd 10.0.0.4:10000
+      route-target import evpn 1:1
+      route-target export evpn 1:1
+!
+end
 ```
 ## Конфигурация
 
