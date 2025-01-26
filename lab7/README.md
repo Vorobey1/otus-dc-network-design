@@ -33,9 +33,9 @@
 |Device  |Ip-address  |
 |:------:|:----------:|
 |Client1 |10.4.0.1/24 |
-|Client2 |10.4.1.1/24 |
-|Client3 |10.4.2.1/24 |
-|Client4 |10.4.3.1/24 |
+|Client2 |10.4.1.2/24 |
+|Client3 |10.4.0.3/24 |
+|Client4 |10.4.2.4/24 |
 
 ## Настройка ESI-LAG
 На Leaf1 и Leaf2 настроим ESI-LAG для Client1 и Client2.  
