@@ -943,23 +943,23 @@ router bgp 64086.60003
 end
 ```
 ## Тестирование связности и отказоустойчивости
-Client1 --> Client4
+Client1 --> Client2
 ```
-Client1#ping 10.4.2.4 source 10.4.0.1
+Client1#ping 10.4.1.2 source 10.4.0.1
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.4.2.4, timeout is 2 seconds:
+Sending 5, 100-byte ICMP Echos to 10.4.1.2, timeout is 2 seconds:
 Packet sent with a source address of 10.4.0.1 
 !!!!!
-Success rate is 100 percent (5/5), round-trip min/avg/max = 13/15/18 ms
+Success rate is 100 percent (5/5), round-trip min/avg/max = 7/21/69 ms
 ```
-Client1 --> Client4 (Отключение Leaf1, через который в данный момент идет трафик)
+Client1 --> Client3
 ```
-Client1#ping 10.4.2.4 source 10.4.0.1
+Client1#ping 10.4.0.3 source 10.4.0.1
 Type escape sequence to abort.
-Sending 5, 100-byte ICMP Echos to 10.4.2.4, timeout is 2 seconds:
+Sending 5, 100-byte ICMP Echos to 10.4.0.3, timeout is 2 seconds:
 Packet sent with a source address of 10.4.0.1 
-.!!!!
-Success rate is 80 percent (4/5), round-trip min/avg/max = 12/13/15 ms
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 12/22/59 ms
 ```
 Client1 --> Client4
 ```
