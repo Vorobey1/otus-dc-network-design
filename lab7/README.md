@@ -189,7 +189,7 @@ BGP routing table entry for mac-ip 5000.0006.8001 10.4.0.1, Route Distinguisher:
 ```
 ## Настройка MLAG
 На Leaf3 и Leaf4 настроим MLAG для клиентов Client3 и Client4  
-Создадим VLAN и SVI для пиринга MLAG Member, а также настроим Peer Link
+Создадим VLAN и SVI для пиринга MLAG устройств, а также настроим Peer Link
 ```
 vlan 4094
    name MLAG
@@ -212,10 +212,50 @@ interface Port-Channel1000
 mlag configuration
    domain-id 1000
    local-interface Vlan4094
-   peer-address 192.168.0.1
+   peer-address <ip соседа по MLAG>
    peer-link Port-Channel1000
 ```
-
+Создадим PO для клиентов и добавим их в MLAG
+```
+interface Ethernet7
+   channel-group 3 mode active
+interface Ethernet8
+   channel-group 4 mode active
+interface Port-Channel3
+   description Client3
+   switchport access vlan 10
+   mlag 3
+interface Port-Channel4
+   description Client4
+   switchport access vlan 20
+   mlag 4
+```
+Изменим настройки VXLAN (Настроим Anycast Lo, настроим использование общего MAC-адреса для обновлений EVPN вместо уникальных для каждого VTEP)
+```
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+```
+Настроим iBGP между MLAG устройствами для отработки отказа падения всех Uplink на VTEP (Знаю что это не best practies)
+```
+vlan 4093
+   name iBGP
+interface Vlan4093
+   description iBGP Peer
+   no autostate
+   ip address <ip для iBGP>
+router bgp 64086.60003
+   neighbor iBGP peer group
+   neighbor iBGP remote-as 64086.60003
+   neighbor iBGP next-hop-peer
+   neighbor iBGP password 7 5BBwhtJStX06PzD9rDdhHg==
+   neighbor iBGP send-community extended
+   neighbor <ip соседа по iBGP> peer group iBGP
+   address-family evpn
+      neighbor iBGP activate
+   address-family ipv4
+      neighbor iBGP activate
+```
 ## Конфигурация АСО
 
 ## Конфигурация
