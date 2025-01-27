@@ -354,7 +354,8 @@ AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Li
                                  10.1.3.4              -       100     0       64086.60000 64086.60003 i
 ```
 ## Конфигурация АСО
-**Spine1**
+<details> 
+<summary>**Spine1**</summary>
 ```
 !
 service routing protocols model multi-agent
@@ -408,6 +409,7 @@ router bgp 64086.60000
 !
 end
 ```
+</details>
 **Spine2**
 ```
 !
