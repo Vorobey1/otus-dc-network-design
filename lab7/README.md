@@ -269,6 +269,30 @@ router bgp 64086.60003
    address-family ipv4
       neighbor iBGP activate
 ```
+Проверка MLAG (show mlag)
+```
+Leaf3#show mlag 
+MLAG Configuration:              
+domain-id                          :                1000
+local-interface                    :            Vlan4094
+peer-address                       :         192.168.0.2
+peer-link                          :    Port-Channel1000
+peer-config                        :          consistent                                                     
+MLAG Status:                     
+state                              :              Active
+negotiation status                 :           Connected
+peer-link status                   :                  Up
+local-int status                   :                  Up
+system-id                          :   52:00:00:15:f4:e8
+dual-primary detection             :            Disabled
+dual-primary interface errdisabled :               False                                                     
+MLAG Ports:                      
+Disabled                           :                   0
+Configured                         :                   0
+Inactive                           :                   0
+Active-partial                     :                   0
+Active-full                        :                   2
+```
 Вывод маршрутной информации EVPN, полученной от MLAG
 ```
 Leaf1#show bgp evpn next-hop 10.1.3.4
