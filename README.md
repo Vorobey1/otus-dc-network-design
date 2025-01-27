@@ -5,4 +5,4 @@
 4. [Проектирование Underlay сети (eBGP)](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab4/README.md)
 5. [Построение Overlay на основе VXLAN EVPN c L2 VNI](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab5/README.md)
 6. [Построение Overlay на основе VXLAN EVPN c L3 VNI](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab6/README.md)
-7. [Настроить отказоустойчивое подключение клиентов с использованием EVPN Multihoming](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab7/README.md)
+7. [Отказоустойчивое подключение клиентов с использованием EVPN Multihoming](https://github.com/Vorobey1/otus-dc-network-design/blob/main/lab7/README.md)
