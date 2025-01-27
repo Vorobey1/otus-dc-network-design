@@ -356,7 +356,7 @@ AS Path Attributes: Or-ID - Originator ID, C-LST - Cluster List, LL Nexthop - Li
 ## Конфигурация АСО
 <details> 
 
-<summary>**Spine1**</summary>
+<summary>Spine1</summary>
 
 ```
 !
@@ -414,7 +414,10 @@ end
 
 </details>
 
-**Spine2**
+<details> 
+
+<summary>Spine2</summary>
+
 ```
 !
 service routing protocols model multi-agent
@@ -465,7 +468,13 @@ router bgp 64086.60000
 !
 end
 ```
-**Leaf1**
+
+</details>
+
+<details> 
+
+<summary>Leaf1</summary>
+
 ```
 !
 service routing protocols model multi-agent
@@ -574,7 +583,13 @@ router bgp 64086.60001
 !
 end
 ```
-**Leaf2**
+
+</details>
+
+<details> 
+
+<summary>Leaf2</summary>
+
 ```
 !
 service routing protocols model multi-agent
@@ -683,7 +698,13 @@ router bgp 64086.60002
 !
 end
 ```
-**Leaf3**
+
+</details>
+
+<details> 
+
+<summary>Leaf3</summary>
+
 ```
 !
 service routing protocols model multi-agent
@@ -834,7 +855,13 @@ router bgp 64086.60003
 !
 end
 ```
-**Leaf4**
+
+</details>
+
+<details> 
+
+<summary>Leaf4</summary>
+
 ```
 !
 service routing protocols model multi-agent
@@ -985,6 +1012,9 @@ router bgp 64086.60003
 !
 end
 ```
+
+</details>
+
 ## Тестирование связности и отказоустойчивости
 Client1 --> Client2
 ```
