@@ -102,3 +102,57 @@ end
 ```
 
 </details>
+
+<details> 
+<summary>Spine1</summary>
+```
+!
+service routing protocols model multi-agent
+!
+hostname Spine2
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.2.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.2.2.5/31
+!
+interface Ethernet4
+   no switchport
+   ip address 10.2.2.7/31
+!
+interface Loopback0
+   ip address 10.0.2.0/32
+!
+ip routing
+!
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000097-4200000100 result accept
+!
+router bgp 64086.60000
+   bgp asn notation asdot
+   router-id 10.0.2.0
+   timers bgp 3 9
+   maximum-paths 3
+   bgp listen range 10.2.2.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      neighbor LEAF activate
+      network 10.0.2.0/32
+!
+end
+```
+</details>
