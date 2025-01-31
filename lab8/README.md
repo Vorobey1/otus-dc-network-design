@@ -98,7 +98,6 @@ router bgp 64086.60000
    address-family ipv6
       network fd00::100/128
 !
-end
 ```
 </details>
 
