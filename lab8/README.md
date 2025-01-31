@@ -154,7 +154,7 @@ router bgp 64086.60003
 !
 ```
 
-Настраиваем eBGP в каждом VRF на Leaf3 и Leaf4.  Для уменьшения маршрутной информации настроим RM, которая будет убирать из аннонсов префиксы /32
+Настраиваем eBGP в каждом VRF на Leaf3 и Leaf4.  Для уменьшения маршрутной информации настроим route-map, которая будет убирать из аннонсов префиксы /32
 ```
 Leaf3
 !
@@ -191,6 +191,38 @@ router bgp 64086.60003
       neighbor 10.5.255.6 remote-as 64086.59999
       neighbor 10.5.255.6 route-map EX_MACIP_RM out
       redistribute connected
+!
+```
+
+Настроим eBGP на R1
+```
+!
+router bgp 64086.59999
+ bgp router-id 172.16.255.255
+ bgp asnotation dot
+ bgp log-neighbor-changes
+ !
+ address-family ipv4 vrf SERVICE-1
+  neighbor BLEAF peer-group
+  neighbor BLEAF remote-as 64086.60003
+  neighbor BLEAF as-override
+  neighbor 10.4.255.1 peer-group BLEAF
+  neighbor 10.4.255.1 activate
+  neighbor 10.4.255.5 peer-group BLEAF
+  neighbor 10.4.255.5 activate
+  maximum-paths 2
+ exit-address-family
+ !
+ address-family ipv4 vrf SERVICE-2
+  neighbor BLEAF peer-group
+  neighbor BLEAF remote-as 64086.60003
+  neighbor BLEAF as-override
+  neighbor 10.5.255.1 peer-group BLEAF
+  neighbor 10.5.255.1 activate
+  neighbor 10.5.255.5 peer-group BLEAF
+  neighbor 10.5.255.5 activate
+  maximum-paths 2
+ exit-address-family
 !
 ```
 
