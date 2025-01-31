@@ -272,9 +272,215 @@ L        10.5.255.6/32 is directly connected, GigabitEthernet0/1.2001
 
 **Leaf1**
 <details>
+<summary>show ip route vrf SERVICE-1</summary>
+
+```
+Leaf1#show ip route vrf SERVICE-1
+Gateway of last resort is not set
+ B E      10.4.0.3/32 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.4.0.0/24 is directly connected, Vlan10
+ B E      10.4.255.0/30 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.4.255.4/30 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.0.0/24 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.1.0/24 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.255.0/30 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.255.4/30 [200/0] via VTEP 10.1.3.4 VNI 1000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
 <summary>show ip route vrf SERVICE-2</summary>
 
 ```
+Leaf1#show ip route vrf SERVICE-2
+Gateway of last resort is not set
+ B E      10.4.0.0/24 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.4.255.0/30 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.4.255.4/30 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.5.0.0/24 is directly connected, Vlan11
+ B E      10.5.1.1/32 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.1.0/24 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.255.0/30 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+ B E      10.5.255.4/30 [200/0] via VTEP 10.1.3.4 VNI 2000 router-mac 52:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show bgp evpn route-type ip-prefix ipv4</summary>
+
+```
+Leaf1#show bgp evpn route-type ip-prefix ipv4 
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.4.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.4.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.4.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.5.0.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.5.1.0/24
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.5.255.0/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 64086.59999 64086.59999 i
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.5.255.4/30
+                                 10.1.3.4              -       100     0       64086.60000 64086.60003 i
+```
+</details>
+
+<details>
+<summary>show bgp evpn route-type ip-prefix 10.4.0.0/24 </summary>
+
+```
+Leaf1#show bgp evpn route-type ip-prefix 10.4.0.0/24 
+BGP routing table information for VRF default
+Router identifier 10.0.0.1, local AS number 4200000097
+BGP routing table entry for ip-prefix 10.4.0.0/24, Route Distinguisher: 10.0.0.3:1000
+ Paths: 2 available
+  64086.60000 64086.60003
+    10.1.3.4 from 10.2.2.1 (10.0.2.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:1:1000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 1000
+  64086.60000 64086.60003
+    10.1.3.4 from 10.2.1.1 (10.0.1.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP, ECMP contributor
+      Extended Community: Route-Target-AS:1:1000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 1000
+BGP routing table entry for ip-prefix 10.4.0.0/24, Route Distinguisher: 10.0.0.3:2000
+ Paths: 2 available
+  64086.60000 64086.60003 64086.59999 64086.59999
+    10.1.3.4 from 10.2.1.1 (10.0.1.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:2:2000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 2000
+  64086.60000 64086.60003 64086.59999 64086.59999
+    10.1.3.4 from 10.2.2.1 (10.0.2.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP, ECMP contributor
+      Extended Community: Route-Target-AS:2:2000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 2000
+BGP routing table entry for ip-prefix 10.4.0.0/24, Route Distinguisher: 10.0.0.4:1000
+ Paths: 2 available
+  64086.60000 64086.60003
+    10.1.3.4 from 10.2.1.1 (10.0.1.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:1:1000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 1000
+  64086.60000 64086.60003
+    10.1.3.4 from 10.2.2.1 (10.0.2.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP, ECMP contributor
+      Extended Community: Route-Target-AS:1:1000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 1000
+BGP routing table entry for ip-prefix 10.4.0.0/24, Route Distinguisher: 10.0.0.4:2000
+ Paths: 2 available
+  64086.60000 64086.60003 64086.59999 64086.59999
+    10.1.3.4 from 10.2.2.1 (10.0.2.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP head, ECMP, best, ECMP contributor
+      Extended Community: Route-Target-AS:2:2000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 2000
+  64086.60000 64086.60003 64086.59999 64086.59999
+    10.1.3.4 from 10.2.1.1 (10.0.1.0)
+      Origin IGP, metric -, localpref 100, weight 0, tag 0, valid, external, ECMP, ECMP contributor
+      Extended Community: Route-Target-AS:2:2000 TunnelEncap:tunnelTypeVxlan EvpnRouterMac:52:00:00:15:f4:e8
+      VNI: 2000
 ```
 </details>
 
