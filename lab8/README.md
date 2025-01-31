@@ -230,7 +230,6 @@ router bgp 64086.59999
 ## Выводы show commands
 **R1**
 <details>
-
 <summary>show ip route vrf SERVICE-1</summary>
 
 ```
@@ -281,7 +280,6 @@ L        10.5.255.6/32 is directly connected, GigabitEthernet0/1.2001
 
 ## Конфигурация АСО
 <details> 
-
 <summary>Spine1</summary>
 
 ```
