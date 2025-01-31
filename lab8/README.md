@@ -484,6 +484,48 @@ BGP routing table entry for ip-prefix 10.4.0.0/24, Route Distinguisher: 10.0.0.4
 ```
 </details>
 
+## Тестирование связности
+Client1 ping Client3
+```
+Client1#ping 10.4.0.3 source 10.4.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.4.0.3, timeout is 2 seconds:
+Packet sent with a source address of 10.4.0.1 
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 13/14/16 ms
+```
+Client1 ping Client2
+```
+Client1#ping 10.5.0.1 source 10.4.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.5.0.1, timeout is 2 seconds:
+Packet sent with a source address of 10.4.0.1 
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 25/27/31 ms
+```
+Client1 ping Client4
+```
+Client1#ping 10.5.1.1 source 10.4.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.5.1.1, timeout is 2 seconds:
+Packet sent with a source address of 10.4.0.1 
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 18/24/46 ms
+```
+Client1 traceroute Client2
+```
+Client1#traceroute 10.5.0.1
+Type escape sequence to abort.
+Tracing the route to 10.5.0.1
+VRF info: (vrf in name/id, vrf out name/id)
+  1 10.4.0.253 4 msec 4 msec 4 msec
+  2 10.4.255.1 12 msec 11 msec 11 msec
+  3 10.4.255.2 14 msec 14 msec 15 msec
+  4 10.5.255.1 15 msec 15 msec 16 msec
+  5 10.5.0.252 27 msec 34 msec 27 msec
+  6 10.5.0.1 33 msec 27 msec * 
+```
+
 ## Конфигурация АСО
 <details> 
 <summary>Spine1</summary>
