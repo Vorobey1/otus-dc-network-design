@@ -251,9 +251,7 @@ B        10.5.255.4/30 [20/0] via 10.5.255.5 (SERVICE-2), 00:42:43
 </details>
 
 <details>
-
 <summary>show ip route vrf SERVICE-2</summary>
-
 ```
 R1#show ip route vrf SERVICE-2
 Gateway of last resort is not set
@@ -269,6 +267,14 @@ C        10.5.255.0/30 is directly connected, GigabitEthernet0/0.2000
 L        10.5.255.2/32 is directly connected, GigabitEthernet0/0.2000
 C        10.5.255.4/30 is directly connected, GigabitEthernet0/1.2001
 L        10.5.255.6/32 is directly connected, GigabitEthernet0/1.2001
+```
+</details>
+
+**Leaf1**
+<details>
+<summary>show ip route vrf SERVICE-2</summary>
+
+```
 ```
 </details>
 
