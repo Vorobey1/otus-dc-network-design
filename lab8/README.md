@@ -153,7 +153,6 @@ router bgp 64086.60000
       neighbor LEAF activate
       network 10.0.2.0/32
 !
-end
 ```
 </details>
 
@@ -165,8 +164,6 @@ end
 service routing protocols model multi-agent
 !
 hostname Leaf1
-!
-spanning-tree mode mstp
 !
 vlan 10-11
 !
@@ -277,7 +274,6 @@ router bgp 64086.60001
       route-target import evpn 2:2000
       route-target export evpn 2:2000
 !
-end
 ```
 </details>
 
@@ -285,6 +281,120 @@ end
 <summary>Leaf2</summary>
    
 ```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf2
+!
+vlan 10-11
+!
+vrf instance SERVICE-1
+!
+vrf instance SERVICE-2
+!
+interface Port-Channel1
+   description Client1
+   switchport access vlan 10
+   !
+   evpn ethernet-segment
+      identifier 0011:1111:1111:1111:1111
+      route-target import 11:11:11:11:11:11
+   lacp system-id 1111.1111.1111
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel2
+   description client2
+   switchport access vlan 11
+   !
+   evpn ethernet-segment
+      identifier 0022:2222:2222:2222:2222
+      route-target import 22:22:22:22:22:22
+   lacp system-id 2222.2222.2222
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.2/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.2/31
+!
+interface Ethernet7
+   channel-group 1 mode active
+!
+interface Ethernet8
+   channel-group 2 mode active
+!
+interface Loopback0
+   ip address 10.0.0.2/32
+!
+interface Vlan10
+   vrf SERVICE-1
+   ip address 10.4.0.252/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf SERVICE-2
+   ip address 10.5.0.252/24
+   ip virtual-router address 10.5.0.254
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vrf SERVICE-1 vni 1000
+   vxlan vrf SERVICE-2 vni 2000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf SERVICE-1
+ip routing vrf SERVICE-2
+!
+router bgp 64086.60002
+   bgp asn notation asdot
+   router-id 10.0.0.2
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.3 peer group SPINE
+   neighbor 10.2.2.3 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.2/32
+   !
+   vrf SERVICE-1
+      rd 10.0.0.2:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+   !
+   vrf SERVICE-2
+      rd 10.0.0.2:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+!
 ```
 </details>
 
