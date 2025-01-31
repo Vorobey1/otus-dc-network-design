@@ -793,5 +793,67 @@ router bgp 64086.60003
 <summary>R1</summary>
    
 ```
+!
+hostname R1
+!
+ip vrf SERVICE-1
+ rd 10.4.255.255:1
+ route-target export 1:1000
+ route-target import 1:1000
+ route-target import 2:2000
+!
+ip vrf SERVICE-2
+ rd 10.5.255.255:1
+ route-target export 2:2000
+ route-target import 2:2000
+ route-target import 1:1000
+!
+interface Loopback0
+ ip address 172.16.255.255 255.255.255.255
+!        
+interface GigabitEthernet0/0.1000
+ encapsulation dot1Q 1000
+ ip vrf forwarding SERVICE-1
+ ip address 10.4.255.2 255.255.255.252
+!
+interface GigabitEthernet0/0.2000
+ encapsulation dot1Q 2000
+ ip vrf forwarding SERVICE-2
+ ip address 10.5.255.2 255.255.255.252
+!
+interface GigabitEthernet0/1.1001
+ encapsulation dot1Q 1001
+ ip vrf forwarding SERVICE-1
+ ip address 10.4.255.6 255.255.255.252
+!
+interface GigabitEthernet0/1.2001
+ encapsulation dot1Q 2001
+ ip vrf forwarding SERVICE-2
+ ip address 10.5.255.6 255.255.255.252
+!
+router bgp 64086.59999
+ bgp router-id 172.16.255.255
+ bgp asnotation dot
+ bgp log-neighbor-changes
+ maximum-paths 2
+ !
+ address-family ipv4 vrf SERVICE-1
+  neighbor 10.4.255.1 remote-as 64086.60003
+  neighbor 10.4.255.1 activate
+  neighbor 10.4.255.1 as-override
+  neighbor 10.4.255.5 remote-as 64086.60003
+  neighbor 10.4.255.5 activate
+  neighbor 10.4.255.5 as-override
+ exit-address-family
+ !
+ address-family ipv4 vrf SERVICE-2
+  neighbor 10.5.255.1 remote-as 64086.60003
+  neighbor 10.5.255.1 activate
+  neighbor 10.5.255.1 as-override
+  neighbor 10.5.255.5 remote-as 64086.60003
+  neighbor 10.5.255.5 activate
+  neighbor 10.5.255.5 as-override
+ exit-address-family
+!
 ```
 </details>
