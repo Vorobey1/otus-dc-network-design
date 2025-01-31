@@ -45,7 +45,32 @@
 В качестве внешнего устройства я использовал маршрутизатор Cisco IOSv (R1). R1 будет выполнять Route Leaking между VRF-ами: SERVICE-1 и SERVICE-2. 
 Для этого необходимо настроить BGP соседство в каждом VRF между Leaf3/Leaf4 и R1.
 
-Настраиваем SVI и сабинтерфейсы на Leaf3/Leaf4 соответственно
+Настраиваем VRF
+```
+Leaf3/Leaf4
+!
+vrf instance SERVICE-1
+vrf instance SERVICE-2
+!
+ip routing vrf SERVICE-1
+ip routing vrf SERVICE-2
+!
+R1
+!
+ip vrf SERVICE-1
+ rd 10.4.255.255:1
+ route-target export 1:1000
+ route-target import 1:1000
+ route-target import 2:2000
+ip vrf SERVICE-2
+ rd 10.5.255.255:1
+ route-target export 2:2000
+ route-target import 2:2000
+ route-target import 1:1000
+!
+```
+
+Настраиваем SVI и сабинтерфейсы на Leaf3/Leaf4 и R1 соответственно
 ```
 Leaf3
 !
