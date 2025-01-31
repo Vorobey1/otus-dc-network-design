@@ -154,6 +154,46 @@ router bgp 64086.60003
 !
 ```
 
+Настраиваем eBGP в каждом VRF на Leaf3 и Leaf4. Для уменьшения маршрутной информации настроим RM, которая будет убирать из аннонсов префиксы /32
+```
+Leaf3
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60003
+   vrf SERVICE-1
+      neighbor 10.4.255.2 remote-as 64086.59999
+      neighbor 10.4.255.2 route-map EX_MACIP_RM out
+      redistribute connected
+   vrf SERVICE-2
+      neighbor 10.5.255.2 remote-as 64086.59999
+      neighbor 10.5.255.2 route-map EX_MACIP_RM out
+      redistribute connected
+!
+Leaf4
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60003
+   vrf SERVICE-1
+      neighbor 10.4.255.6 remote-as 64086.59999
+      neighbor 10.4.255.6 route-map EX_MACIP_RM out
+      redistribute connected
+   vrf SERVICE-2
+      neighbor 10.5.255.6 remote-as 64086.59999
+      neighbor 10.5.255.6 route-map EX_MACIP_RM out
+      redistribute connected
+!
+```
+
 ## Конфигурация АСО
 <details> 
 
