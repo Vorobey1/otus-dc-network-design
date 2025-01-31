@@ -835,24 +835,26 @@ router bgp 64086.59999
  bgp router-id 172.16.255.255
  bgp asnotation dot
  bgp log-neighbor-changes
- maximum-paths 2
  !
  address-family ipv4 vrf SERVICE-1
   neighbor 10.4.255.1 remote-as 64086.60003
   neighbor 10.4.255.1 activate
-  neighbor 10.4.255.1 as-override
+  neighbor 10.4.255.1 as-override split-horizon
   neighbor 10.4.255.5 remote-as 64086.60003
   neighbor 10.4.255.5 activate
-  neighbor 10.4.255.5 as-override
+  neighbor 10.4.255.5 as-override split-horizon
+  maximum-paths 2
  exit-address-family
  !
  address-family ipv4 vrf SERVICE-2
-  neighbor 10.5.255.1 remote-as 64086.60003
+  neighbor BLEAF peer-group
+  neighbor BLEAF remote-as 64086.60003
+  neighbor BLEAF as-override
+  neighbor 10.5.255.1 peer-group BLEAF
   neighbor 10.5.255.1 activate
-  neighbor 10.5.255.1 as-override
-  neighbor 10.5.255.5 remote-as 64086.60003
+  neighbor 10.5.255.5 peer-group BLEAF
   neighbor 10.5.255.5 activate
-  neighbor 10.5.255.5 as-override
+  maximum-paths 2
  exit-address-family
 !
 ```
