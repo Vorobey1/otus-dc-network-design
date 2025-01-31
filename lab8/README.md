@@ -596,6 +596,197 @@ router bgp 64086.60003
 <summary>Leaf4</summary>
    
 ```
+!
+service routing protocols model multi-agent
+!
+link tracking group MLAG_UPLINK_TRACK
+   recovery delay 60
+!
+hostname Leaf4
+!
+no spanning-tree vlan-id 4094
+!
+vlan 10-11,20,1000,2000
+!
+vlan 1001
+   name SERVICE-1
+!
+vlan 2001
+   name SERVICE-2
+!
+vlan 4094
+   name MLAG
+   trunk group MLAGPEER
+!
+vrf instance SERVICE-1
+!
+vrf instance SERVICE-2
+!
+interface Port-Channel3
+   description Client3
+   switchport access vlan 10
+   mlag 3
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+   link tracking group MLAG_UPLINK_TRACK downstream
+!
+interface Port-Channel4
+   description Client4
+   switchport access vlan 20
+   mlag 4
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+   link tracking group MLAG_UPLINK_TRACK downstream
+!
+interface Port-Channel1000
+   description MLAG Peer-Link
+   switchport mode trunk
+   switchport trunk group MLAGPEER
+!
+interface Ethernet1
+   shutdown
+   no switchport
+   ip address 10.2.1.6/31
+   link tracking group MLAG_UPLINK_TRACK upstream
+!
+interface Ethernet2
+   shutdown
+   no switchport
+   ip address 10.2.2.6/31
+   link tracking group MLAG_UPLINK_TRACK upstream
+!
+interface Ethernet3
+   switchport trunk allowed vlan 1001,2001
+   switchport mode trunk
+   link tracking group MLAG_UPLINK_TRACK downstream
+!
+interface Ethernet4
+   channel-group 1000 mode active
+!
+interface Ethernet5
+   channel-group 1000 mode active
+!
+interface Ethernet7
+   channel-group 3 mode active
+!
+interface Ethernet8
+   channel-group 4 mode active
+!
+interface Loopback0
+   ip address 10.0.0.4/32
+!
+interface Loopback1
+   ip address 10.1.3.4/32
+!
+interface Vlan10
+   no autostate
+   vrf SERVICE-1
+   ip address 10.4.0.250/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf SERVICE-2
+   ip address 10.5.0.250/24
+   ip virtual-router address 10.5.0.254
+!
+interface Vlan20
+   vrf SERVICE-2
+   ip address 10.5.1.252/24
+   ip virtual-router address 10.5.1.254
+!
+interface Vlan1001
+   vrf SERVICE-1
+   ip address 10.4.255.5/30
+!
+interface Vlan2001
+   vrf SERVICE-2
+   ip address 10.5.255.5/30
+!
+interface Vlan4094
+   description MLAG Peer Sync
+   no autostate
+   ip address 192.168.0.2/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback1
+   vxlan virtual-router encapsulation mac-address mlag-system-id
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE-1 vni 1000
+   vxlan vrf SERVICE-2 vni 2000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf SERVICE-1
+ip routing vrf SERVICE-2
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+mlag configuration
+   domain-id 1000
+   local-interface Vlan4094
+   peer-address 192.168.0.1
+   peer-link Port-Channel1000
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60003
+   bgp asn notation asdot
+   router-id 10.0.0.4
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60000
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.7 peer group SPINE
+   neighbor 10.2.2.7 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.4/32
+      network 10.1.3.4/32
+   !
+   vrf SERVICE-1
+      rd 10.0.0.3:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+      neighbor 10.4.255.6 remote-as 64086.59999
+      neighbor 10.4.255.6 route-map EX_MACIP_RM out
+      redistribute connected
+   !
+   vrf SERVICE-2
+      rd 10.0.0.4:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+      neighbor 10.5.255.6 remote-as 64086.59999
+      neighbor 10.5.255.6 route-map EX_MACIP_RM out
+      redistribute connected
+!
 ```
 </details>
 
