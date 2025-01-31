@@ -252,6 +252,7 @@ B        10.5.255.4/30 [20/0] via 10.5.255.5 (SERVICE-2), 00:42:43
 
 <details>
 <summary>show ip route vrf SERVICE-2</summary>
+ 
 ```
 R1#show ip route vrf SERVICE-2
 Gateway of last resort is not set
