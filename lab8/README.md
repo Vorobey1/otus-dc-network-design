@@ -100,11 +100,10 @@ router bgp 64086.60000
 !
 end
 ```
-
 </details>
 
 <details> 
-<summary>Spine1</summary>
+<summary>Spine2</summary>
    
 ```
 !
@@ -155,5 +154,40 @@ router bgp 64086.60000
       network 10.0.2.0/32
 !
 end
+```
+</details>
+
+<details> 
+<summary>Leaf1</summary>
+   
+```
+```
+</details>
+
+<details> 
+<summary>Leaf2</summary>
+   
+```
+```
+</details>
+
+<details> 
+<summary>Leaf3</summary>
+   
+```
+```
+</details>
+
+<details> 
+<summary>Leaf4</summary>
+   
+```
+```
+</details>
+
+<details> 
+<summary>R1</summary>
+   
+```
 ```
 </details>
