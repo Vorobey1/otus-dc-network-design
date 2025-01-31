@@ -42,8 +42,58 @@
 |SERVICE-2   |10.5.0.0/16 |
 
 ## Настройка маршрутизации между VRF через внешнее устройство
-В качестве внешнего устройства я использовал маршрутизатор Cisco IOSv (R1). R1 будет выполнять Route Leaking между VRF-ами: SERVICE-1 и SERVICE-2.
+В качестве внешнего устройства я использовал маршрутизатор Cisco IOSv (R1). R1 будет выполнять Route Leaking между VRF-ами: SERVICE-1 и SERVICE-2. 
 Для этого необходимо настроить BGP соседство в каждом VRF между Leaf3/Leaf4 и R1.
+
+Настраиваем SVI и сабинтерфейсы на Leaf3/Leaf4 соответственно
+```
+Leaf3
+!
+vlan 1000,10001,2000,2001
+!
+interface Vlan1000
+   vrf SERVICE-1
+   ip address 10.4.255.1/30
+interface Vlan2000
+   vrf SERVICE-2
+   ip address 10.5.255.1/30
+!
+Leaf4
+!
+vlan 1000,10001,2000,2001
+!
+interface Vlan1001
+   vrf SERVICE-1
+   ip address 10.4.255.5/30
+interface Vlan2001
+   vrf SERVICE-2
+   ip address 10.5.255.5/30
+!
+R1
+!
+interface GigabitEthernet0/0
+ no shutdown         
+interface GigabitEthernet0/0.1000
+ encapsulation dot1Q 1000
+ ip vrf forwarding SERVICE-1
+ ip address 10.4.255.2 255.255.255.252
+interface GigabitEthernet0/0.2000
+ encapsulation dot1Q 2000
+ ip vrf forwarding SERVICE-2
+ ip address 10.5.255.2 255.255.255.252
+!
+interface GigabitEthernet0/1
+ no shutdown 
+interface GigabitEthernet0/1.1001
+ encapsulation dot1Q 1001
+ ip vrf forwarding SERVICE-1
+ ip address 10.4.255.6 255.255.255.252
+interface GigabitEthernet0/1.2001
+ encapsulation dot1Q 2001
+ ip vrf forwarding SERVICE-2
+ ip address 10.5.255.6 255.255.255.252
+!
+```
 
 
 ## Конфигурация АСО
