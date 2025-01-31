@@ -120,6 +120,39 @@ interface GigabitEthernet0/1.2001
 !
 ```
 
+На BorderLeaf (Leaf3, Leaf4) создаем все l2vni и l3vni в нашем POD
+```
+!
+interface Vxlan1
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf SERVICE-1 vni 1000
+   vxlan vrf SERVICE-2 vni 2000
+!
+router bgp 64086.60003
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   vrf SERVICE-1
+      rd 10.0.0.3:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+   vrf SERVICE-2
+      rd 10.0.0.3:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+!
+```
 
 ## Конфигурация АСО
 <details> 
