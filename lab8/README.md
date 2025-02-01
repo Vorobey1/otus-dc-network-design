@@ -1254,7 +1254,7 @@ router bgp 64086.60003
       network 10.1.3.4/32
    !
    vrf SERVICE-1
-      rd 10.0.0.3:1000
+      rd 10.0.0.4:1000
       route-target import evpn 1:1000
       route-target export evpn 1:1000
       neighbor 10.4.255.6 remote-as 64086.59999
