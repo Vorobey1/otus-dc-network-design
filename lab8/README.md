@@ -577,9 +577,6 @@ router bgp 64086.60000
    address-family ipv4
       neighbor LEAF activate
       network 10.0.1.0/32
-   !
-   address-family ipv6
-      network fd00::100/128
 !
 ```
 </details>
