@@ -1,6 +1,5 @@
 **FW1**
-
-'''
+```
 !
 hostname FW1
 names
@@ -137,10 +136,9 @@ policy-map type inspect dns migrated_dns_map_2
 !
 service-policy global_policy global
 !
-'''
+```
 **FW2**
-
-'''
+```
 !
 hostname FW2
 enable password ***** pbkdf2
@@ -293,5 +291,4 @@ policy-map type inspect dns migrated_dns_map_1
 !
 service-policy global_policy global
 !
-'''
-
+```
