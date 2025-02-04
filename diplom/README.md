@@ -792,7 +792,7 @@ L        10.14.255.5/32 is directly connected, GigabitEthernet0/3.2112
 ```
 </details>
 
-**Leaf11**
+**Leaf11 (POD1)**
 <details>
 <summary>show ip route vrf DEV</summary>
 
@@ -841,7 +841,7 @@ Gateway of last resort is not set
 ```
 </details>
 
-**Leaf21**
+**Leaf21 (POD2)**
 <details>
 <summary>show ip route vrf DEV</summary>
 
@@ -888,3 +888,42 @@ Gateway of last resort is not set
                                via VTEP 10.8.0.4 VNI 6000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
 ```
 </details>
+
+## Тестирование связности между POD1 и POD2
+
+Client6 ping Client1
+```
+Client6#ping 10.4.0.1 source 10.14.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.4.0.1, timeout is 2 seconds:
+Packet sent with a source address of 10.14.0.1 
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/33/38 ms
+```
+Client6 ping Client2
+```
+Client6#ping 10.5.0.1 source 10.14.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.5.0.1, timeout is 2 seconds:
+Packet sent with a source address of 10.14.0.1 
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 32/38/56 ms
+```
+Client6 ping Client3
+```
+Client6#ping 10.6.0.1 source 10.14.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.6.0.1, timeout is 2 seconds:
+Packet sent with a source address of 10.14.0.1 
+!!!!!
+Success rate is 100 percent (5/5), round-trip min/avg/max = 28/29/30 ms
+```
+Client4 ping Client3 (Правильно что нет пинга: меньше security-level)
+```
+Client4#ping 10.6.0.1 so 10.12.0.1
+Type escape sequence to abort.
+Sending 5, 100-byte ICMP Echos to 10.6.0.1, timeout is 2 seconds:
+Packet sent with a source address of 10.12.0.1 
+.....
+Success rate is 0 percent (0/5)
+```
