@@ -18,21 +18,21 @@
 <details>
 <summary>Адресное пространство POD1</summary>
 
-|Device  |Loopback    |
-|:------:|:----------:|
-|Spine11 |10.0.1.0/32 |
-|Spine12 |10.0.2.0/32 |
-|Leaf11  |10.0.0.1/32 |
-|Leaf12  |10.0.0.2/32 |
-|Leaf13  |10.0.0.3/32 |
-|Leaf14  |10.0.0.4/32 |
+|Device   |Loopback    |
+|:-------:|:----------:|
+|Spine11  |10.0.1.0/32 |
+|Spine12  |10.0.2.0/32 |
+|Leaf11   |10.0.0.1/32 |
+|Leaf12   |10.0.0.2/32 |
+|BLeaf13  |10.0.0.3/32 |
+|BLeaf14  |10.0.0.4/32 |
 
 |p2p          |Spine11     |Spine12     |
 |:-----------:|:----------:|:----------:|
 |Leaf11       |10.2.1.0/31 |10.2.2.0/31 |
 |Leaf12       |10.2.1.2/31 |10.2.2.2/31 |
-|Leaf13       |10.2.1.4/31 |10.2.2.4/31 |
-|Leaf14       |10.2.1.6/31 |10.2.2.6/31 |
+|BLeaf13      |10.2.1.4/31 |10.2.2.4/31 |
+|BLeaf14      |10.2.1.6/31 |10.2.2.6/31 |
 
 |Device  |Ip-address  |
 |:------:|:----------:|
@@ -50,21 +50,21 @@
 <details>
 <summary>Адресное пространство POD2</summary>
 
-|Device  |Loopback    |
-|:------:|:----------:|
-|Spine21 |10.8.1.0/32 |
-|Spine22 |10.8.2.0/32 |
-|Leaf21  |10.8.0.1/32 |
-|Leaf22  |10.8.0.2/32 |
-|Leaf23  |10.8.0.3/32 |
-|Leaf24  |10.8.0.4/32 |
+|Device   |Loopback    |
+|:-------:|:----------:|
+|Spine21  |10.8.1.0/32 |
+|Spine22  |10.8.2.0/32 |
+|Leaf21   |10.8.0.1/32 |
+|Leaf22   |10.8.0.2/32 |
+|BLeaf23  |10.8.0.3/32 |
+|BLeaf24  |10.8.0.4/32 |
 
 |p2p          |Spine21      |Spine22      |
 |:-----------:|:-----------:|:-----------:|
 |Leaf21       |10.10.1.0/31 |10.10.2.0/31 |
 |Leaf22       |10.10.1.2/31 |10.10.2.2/31 |
-|Leaf23       |10.10.1.4/31 |10.10.2.4/31 |
-|Leaf24       |10.10.1.6/31 |10.10.2.6/31 |
+|BLeaf23      |10.10.1.4/31 |10.10.2.4/31 |
+|BLeaf24      |10.10.1.6/31 |10.10.2.6/31 |
 
 |Device  |Ip-address  |
 |:------:|:----------:|
@@ -81,11 +81,11 @@
 
 ## Настройка маршрутизации между VRF чере Firewall
 В качестве внешнего устройства я использовал Firewall Cisco ASA (FW). FW будет выполнять Route Leaking между VRF-ами: DEV, STAGE, PROD. 
-Для этого необходимо настроить BGP соседство в каждом VRF между Leaf3/Leaf4 и FW. FW будет всю маршрутную информацию собирать в GRT.
+Для этого необходимо настроить BGP соседство в каждом VRF между BLeaf13/BLeaf14 и FW. FW будет всю маршрутную информацию собирать в GRT.
 
 Настраиваем VRF
 ```
-Leaf13/Leaf14
+BLeaf13/BLeaf14
 !
 vrf instance DEV
 vrf instance STAGE
@@ -106,6 +106,60 @@ ip routing vrf STAGE
 ip routing vrf PROD
 !
 ```
+
+Настраиваем SVI и сабинтерфейсы на Leaf13/Leaf14 и R1 соответственно
+```
+Leaf13
+!
+vlan 3000,3001,3002
+!
+interface Vlan3000
+   vrf DEV
+   ip address 10.4.254.2/30
+interface Vlan3001
+   vrf STAGE
+   ip address 10.5.254.2/30
+interface Vlan3002
+   vrf PROD
+   ip address 10.6.254.2/30
+!
+Leaf14
+!
+vlan 1000,10001,2000,2001
+!
+interface Vlan1001
+   vrf SERVICE-1
+   ip address 10.4.255.5/30
+interface Vlan2001
+   vrf SERVICE-2
+   ip address 10.5.255.5/30
+!
+R1
+!
+interface GigabitEthernet0/0
+ no shutdown         
+interface GigabitEthernet0/0.1000
+ encapsulation dot1Q 1000
+ ip vrf forwarding SERVICE-1
+ ip address 10.4.255.2 255.255.255.252
+interface GigabitEthernet0/0.2000
+ encapsulation dot1Q 2000
+ ip vrf forwarding SERVICE-2
+ ip address 10.5.255.2 255.255.255.252
+!
+interface GigabitEthernet0/1
+ no shutdown 
+interface GigabitEthernet0/1.1001
+ encapsulation dot1Q 1001
+ ip vrf forwarding SERVICE-1
+ ip address 10.4.255.6 255.255.255.252
+interface GigabitEthernet0/1.2001
+ encapsulation dot1Q 2001
+ ip vrf forwarding SERVICE-2
+ ip address 10.5.255.6 255.255.255.252
+!
+```
+
 
 **FW1**
 ```
