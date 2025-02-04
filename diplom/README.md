@@ -2232,3 +2232,501 @@ router bgp 64086.60002
 !
 ```
 </details>
+<details>
+<summary>BLeaf23</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname BLeaf23
+!
+vlan 110-111,120,2100-2102,3000-3002
+!
+vrf instance DEV
+!
+vrf instance PROD
+!
+vrf instance STAGE
+!
+interface Ethernet1
+   no switchport
+   ip address 10.10.1.4/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.10.2.4/31
+!
+interface Ethernet3
+   switchport trunk allowed vlan 2100-2102
+   switchport mode trunk
+!
+interface Ethernet8
+   switchport trunk allowed vlan 3000-3002
+   switchport mode trunk
+!
+interface Loopback0
+   ip address 10.8.0.3/32
+!
+interface Vlan110
+   vrf DEV
+   ip address 10.12.0.252/24
+   ip virtual-router address 10.12.0.254
+!
+interface Vlan111
+   vrf STAGE
+   ip address 10.13.0.252/24
+   ip virtual-router address 10.13.0.254
+!
+interface Vlan120
+   vrf PROD
+   ip address 10.14.0.252/24
+   ip virtual-router address 10.14.0.254
+!
+interface Vlan2100
+   vrf DEV
+   ip address 10.12.255.2/30
+!
+interface Vlan2101
+   vrf STAGE
+   ip address 10.13.255.2/30
+!
+interface Vlan2102
+   vrf PROD
+   ip address 10.14.255.2/30
+!
+interface Vlan3000
+   vrf DEV
+   ip address 10.12.254.2/30
+!
+interface Vlan3001
+   vrf STAGE
+   ip address 10.13.254.2/30
+!
+interface Vlan3002
+   vrf PROD
+   ip address 10.14.254.2/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 110 vni 10110
+   vxlan vlan 111 vni 10111
+   vxlan vlan 120 vni 10120
+   vxlan vrf DEV vni 4000
+   vxlan vrf PROD vni 6000
+   vxlan vrf STAGE vni 5000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf DEV
+ip routing vrf PROD
+ip routing vrf STAGE
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60002
+   bgp asn notation asdot
+   router-id 10.8.0.3
+   timers bgp 3 9
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60002
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.10.1.5 peer group SPINE
+   neighbor 10.10.2.5 peer group SPINE
+   !
+   vlan 110
+      rd auto
+      route-target both 110:10110
+      redistribute learned
+   !
+   vlan 111
+      rd auto
+      route-target both 111:10111
+      redistribute learned
+   !
+   vlan 120
+      rd auto
+      route-target both 120:10120
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.8.0.3/32
+   !
+   vrf DEV
+      rd 10.8.0.3:4000
+      route-target import evpn 4:4000
+      route-target export evpn 4:4000
+      neighbor 10.12.254.1 remote-as 64086.59997
+      neighbor 10.12.254.1 route-map EX_MACIP_RM out
+      neighbor 10.12.255.1 remote-as 64086.59999
+      neighbor 10.12.255.1 route-map EX_MACIP_RM out
+      aggregate-address 10.12.0.0/16 summary-only
+      redistribute connected
+   !
+   vrf PROD
+      rd 10.8.0.3:6000
+      route-target import evpn 6:6000
+      route-target export evpn 6:6000
+      neighbor 10.14.254.1 remote-as 64086.59997
+      neighbor 10.14.254.1 route-map EX_MACIP_RM out
+      neighbor 10.14.255.1 remote-as 64086.59999
+      neighbor 10.14.255.1 route-map EX_MACIP_RM out
+      aggregate-address 10.14.0.0/16 summary-only
+      redistribute connected
+   !
+   vrf STAGE
+      rd 10.8.0.3:5000
+      route-target import evpn 5:5000
+      route-target export evpn 5:5000
+      neighbor 10.13.254.1 remote-as 64086.59997
+      neighbor 10.13.254.1 route-map EX_MACIP_RM out
+      neighbor 10.13.255.1 remote-as 64086.59999
+      neighbor 10.13.255.1 route-map EX_MACIP_RM out
+      aggregate-address 10.13.0.0/16 summary-only
+      redistribute connected
+!
+```
+</details>
+<details>
+<summary>BLeaf24</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname BLeaf24
+!
+vlan 110-111,120,2110-2112,4000-4002
+!
+vrf instance DEV
+!
+vrf instance PROD
+!
+vrf instance STAGE
+!
+interface Ethernet1
+   no switchport
+   ip address 10.10.1.6/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.10.2.6/31
+!
+interface Ethernet3
+   switchport trunk allowed vlan 2110-2112
+   switchport mode trunk
+!
+interface Ethernet8
+   switchport trunk allowed vlan 4000-4002
+   switchport mode trunk
+!
+interface Loopback0
+   ip address 10.8.0.4/32
+!
+interface Vlan110
+   vrf DEV
+   ip address 10.12.0.253/24
+   ip virtual-router address 10.12.0.254
+!
+interface Vlan111
+   vrf STAGE
+   ip address 10.13.0.253/24
+   ip virtual-router address 10.13.0.254
+!
+interface Vlan120
+   vrf PROD
+   ip address 10.14.0.253/24
+   ip virtual-router address 10.14.0.254
+!
+interface Vlan2110
+   vrf DEV
+   ip address 10.12.255.6/30
+!
+interface Vlan2111
+   vrf STAGE
+   ip address 10.13.255.6/30
+!
+interface Vlan2112
+   vrf PROD
+   ip address 10.14.255.6/30
+!
+interface Vlan4000
+   vrf DEV
+   ip address 10.12.254.6/30
+!
+interface Vlan4001
+   vrf STAGE
+   ip address 10.13.254.6/30
+!
+interface Vlan4002
+   vrf PROD
+   ip address 10.14.254.6/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 110 vni 10110
+   vxlan vlan 111 vni 10111
+   vxlan vlan 120 vni 10120
+   vxlan vrf DEV vni 4000
+   vxlan vrf PROD vni 6000
+   vxlan vrf STAGE vni 5000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf DEV
+ip routing vrf PROD
+ip routing vrf STAGE
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60002
+   bgp asn notation asdot
+   router-id 10.8.0.4
+   timers bgp 3 9
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60002
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.10.1.7 peer group SPINE
+   neighbor 10.10.2.7 peer group SPINE
+   !
+   vlan 110
+      rd auto
+      route-target both 110:10110
+      redistribute learned
+   !
+   vlan 111
+      rd auto
+      route-target both 111:10011
+      redistribute learned
+   !
+   vlan 120
+      rd auto
+      route-target both 120:10120
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.8.0.4/32
+   !
+   vrf DEV
+      rd 10.8.0.4:4000
+      route-target import evpn 4:4000
+      route-target export evpn 4:4000
+      neighbor 10.12.254.5 remote-as 64086.59997
+      neighbor 10.12.254.5 route-map EX_MACIP_RM out
+      neighbor 10.12.255.5 remote-as 64086.59999
+      neighbor 10.12.255.5 route-map EX_MACIP_RM out
+      aggregate-address 10.12.0.0/16 summary-only
+      redistribute connected
+   !
+   vrf PROD
+      rd 10.8.0.4:6000
+      route-target import evpn 6:6000
+      route-target export evpn 6:6000
+      neighbor 10.14.254.5 remote-as 64086.59997
+      neighbor 10.14.254.5 route-map EX_MACIP_RM out
+      neighbor 10.14.255.5 remote-as 64086.59999
+      neighbor 10.14.255.5 route-map EX_MACIP_RM out
+      aggregate-address 10.14.0.0/16 summary-only
+      redistribute connected
+   !
+   vrf STAGE
+      rd 10.8.0.4:5000
+      route-target import evpn 5:5000
+      route-target export evpn 5:5000
+      neighbor 10.13.254.5 remote-as 64086.59997
+      neighbor 10.13.254.5 route-map EX_MACIP_RM out
+      neighbor 10.13.255.5 remote-as 64086.59999
+      neighbor 10.13.255.5 route-map EX_MACIP_RM out
+      aggregate-address 10.13.0.0/16 summary-only
+      redistribute connected
+!
+```
+</details>
+
+**L3**
+<details>
+<summary>L3</summary>
+
+```
+!
+hostname R1
+!
+ip vrf DEV
+ rd 10.4.255.255:1
+ route-target export 1:1000
+ route-target export 4:4000
+ route-target import 1:1000
+ route-target import 4:4000
+!
+ip vrf PROD
+ rd 10.4.255.255:3
+ route-target export 3:3000
+ route-target export 6:6000
+ route-target import 3:3000
+ route-target import 6:6000
+!
+ip vrf STAGE
+ rd 10.4.255.255:2
+ route-target export 2:2000
+ route-target export 5:5000
+ route-target import 2:2000
+ route-target import 5:5000
+!
+interface Loopback0
+ ip address 172.16.255.255 255.255.255.255
+!
+interface GigabitEthernet0/0
+ no shutdown
+!
+interface GigabitEthernet0/0.2000
+ encapsulation dot1Q 2000
+ ip vrf forwarding DEV
+ ip address 10.4.255.1 255.255.255.252
+!
+interface GigabitEthernet0/0.2001
+ encapsulation dot1Q 2001
+ ip vrf forwarding STAGE
+ ip address 10.5.255.1 255.255.255.252
+!
+interface GigabitEthernet0/0.2002
+ encapsulation dot1Q 2002
+ ip vrf forwarding PROD
+ ip address 10.6.255.1 255.255.255.252
+!
+interface GigabitEthernet0/1
+ no shutdown
+!
+interface GigabitEthernet0/1.2010
+ encapsulation dot1Q 2010
+ ip vrf forwarding DEV
+ ip address 10.4.255.5 255.255.255.252
+!
+interface GigabitEthernet0/1.2011
+ encapsulation dot1Q 2011
+ ip vrf forwarding STAGE
+ ip address 10.5.255.5 255.255.255.252
+!
+interface GigabitEthernet0/1.2012
+ encapsulation dot1Q 2012
+ ip vrf forwarding PROD
+ ip address 10.6.255.5 255.255.255.252
+!
+interface GigabitEthernet0/2
+ no shutdown
+!
+interface GigabitEthernet0/2.2100
+ encapsulation dot1Q 2100
+ ip vrf forwarding DEV
+ ip address 10.12.255.1 255.255.255.252
+!
+interface GigabitEthernet0/2.2101
+ encapsulation dot1Q 2101
+ ip vrf forwarding STAGE
+ ip address 10.13.255.1 255.255.255.252
+!
+interface GigabitEthernet0/2.2102
+ encapsulation dot1Q 2102
+ ip vrf forwarding PROD
+ ip address 10.14.255.1 255.255.255.252
+!
+interface GigabitEthernet0/3
+ no shutdown
+!
+interface GigabitEthernet0/3.2110
+ encapsulation dot1Q 2110
+ ip vrf forwarding DEV
+ ip address 10.12.255.5 255.255.255.252
+!
+interface GigabitEthernet0/3.2111
+ encapsulation dot1Q 2111
+ ip vrf forwarding STAGE
+ ip address 10.13.255.5 255.255.255.252
+!
+interface GigabitEthernet0/3.2112
+ encapsulation dot1Q 2112
+ ip vrf forwarding PROD
+ ip address 10.14.255.5 255.255.255.252
+!
+router bgp 64086.59999
+ bgp router-id 172.16.255.255
+ bgp asnotation dot
+ bgp log-neighbor-changes
+ !
+ address-family ipv4 vrf DEV
+  neighbor BLEAF-POD1 peer-group
+  neighbor BLEAF-POD1 remote-as 64086.60001
+  neighbor BLEAF-POD2 peer-group
+  neighbor BLEAF-POD2 remote-as 64086.60002
+  neighbor 10.4.255.2 peer-group BLEAF-POD1
+  neighbor 10.4.255.2 activate
+  neighbor 10.4.255.6 peer-group BLEAF-POD1
+  neighbor 10.4.255.6 activate
+  neighbor 10.12.255.2 peer-group BLEAF-POD2
+  neighbor 10.12.255.2 activate
+  neighbor 10.12.255.6 peer-group BLEAF-POD2
+  neighbor 10.12.255.6 activate
+  maximum-paths 2
+ exit-address-family
+ !
+ address-family ipv4 vrf PROD
+  neighbor POD1-PROD peer-group
+  neighbor POD1-PROD remote-as 64086.60001
+  neighbor POD2-PROD peer-group
+  neighbor POD2-PROD remote-as 64086.60002
+  neighbor 10.6.255.2 peer-group POD1-PROD
+  neighbor 10.6.255.2 activate
+  neighbor 10.6.255.6 peer-group POD1-PROD
+  neighbor 10.6.255.6 activate
+  neighbor 10.14.255.2 peer-group POD2-PROD
+  neighbor 10.14.255.2 activate
+  neighbor 10.14.255.6 peer-group POD2-PROD
+  neighbor 10.14.255.6 activate
+  maximum-paths 2
+ exit-address-family
+ !
+ address-family ipv4 vrf STAGE
+  neighbor POD1-STAGE peer-group
+  neighbor POD1-STAGE remote-as 64086.60001
+  neighbor POD2-STAGE peer-group
+  neighbor POD2-STAGE remote-as 64086.60002
+  neighbor 10.5.255.2 peer-group POD1-STAGE
+  neighbor 10.5.255.2 activate
+  neighbor 10.5.255.6 peer-group POD1-STAGE
+  neighbor 10.5.255.6 activate
+  neighbor 10.13.255.2 peer-group POD2-STAGE
+  neighbor 10.13.255.2 activate
+  neighbor 10.13.255.6 peer-group POD2-STAGE
+  neighbor 10.13.255.6 activate
+  maximum-paths 2
+ exit-address-family
+!
+```
+</details>
