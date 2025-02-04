@@ -217,7 +217,6 @@ router bgp 64086.60001
       route-target export evpn 2:2000
 !
 ```
-
 Настраиваем eBGP в каждом VRF на BLeaf13 и BLeaf14.  Для уменьшения маршрутной информации настроим route-map, которая будет убирать из аннонсов префиксы /32
 ```
 Bleaf13
@@ -263,6 +262,37 @@ router bgp 64086.60001
       neighbor 10.5.254.5 remote-as 64086.59998
       neighbor 10.5.254.5 route-map EX_MACIP_RM out
       redistribute connected
+!
+```
+Настроим eBGP на FW1
+```
+!
+router bgp 64086.59998
+ bgp log-neighbor-changes
+ bgp asnotation dot
+ address-family ipv4 unicast
+  neighbor 10.4.254.2 remote-as 64086.60001
+  neighbor 10.4.254.2 activate
+  neighbor 10.4.254.2 default-originate
+  neighbor 10.5.254.2 remote-as 64086.60001
+  neighbor 10.5.254.2 activate
+  neighbor 10.5.254.2 default-originate
+  neighbor 10.6.254.2 remote-as 64086.60001
+  neighbor 10.6.254.2 activate
+  neighbor 10.6.254.2 default-originate
+  neighbor 10.4.254.6 remote-as 64086.60001
+  neighbor 10.4.254.6 activate
+  neighbor 10.4.254.6 default-originate
+  neighbor 10.5.254.6 remote-as 64086.60001
+  neighbor 10.5.254.6 activate
+  neighbor 10.5.254.6 default-originate
+  neighbor 10.6.254.6 remote-as 64086.60001
+  neighbor 10.6.254.6 activate
+  neighbor 10.6.254.6 default-originate
+  maximum-paths 2
+  no auto-summary
+  no synchronization
+ exit-address-family
 !
 ```
 
