@@ -80,8 +80,8 @@
 </details>
 
 ## Настройка маршрутизации между VRF чере Firewall
-В качестве внешнего устройства я использовал Firewall Cisco ASA (FW). FW будет выполнять Route Leaking между VRF-ами: DEV, STAGE, PROD. 
-Для этого необходимо настроить BGP соседство в каждом VRF между BLeaf13/BLeaf14 и FW. FW будет всю маршрутную информацию собирать в GRT.
+В качестве внешнего устройства я использовал Firewall Cisco ASA (FW1). FW1 будет выполнять Route Leaking между VRF-ами: DEV, STAGE, PROD. 
+Для этого необходимо настроить BGP соседство в каждом VRF между BLeaf13/BLeaf14 и FW1. FW1 будет всю маршрутную информацию собирать в GRT.
 
 Настраиваем VRF
 ```
@@ -107,9 +107,9 @@ ip routing vrf PROD
 !
 ```
 
-Настраиваем SVI и сабинтерфейсы на Leaf13/Leaf14 и R1 соответственно
+Настраиваем SVI и сабинтерфейсы на BLeaf13/BLeaf14 и FW1 соответственно
 ```
-Leaf13
+BLeaf13
 !
 vlan 3000,3001,3002
 !
@@ -123,40 +123,61 @@ interface Vlan3002
    vrf PROD
    ip address 10.6.254.2/30
 !
-Leaf14
+BLeaf14
 !
-vlan 1000,10001,2000,2001
+vlan 4000,4001,4002
 !
-interface Vlan1001
-   vrf SERVICE-1
-   ip address 10.4.255.5/30
-interface Vlan2001
-   vrf SERVICE-2
-   ip address 10.5.255.5/30
+interface Vlan4000
+   vrf DEV
+   ip address 10.4.254.6/30
+interface Vlan4001
+   vrf STAGE
+   ip address 10.5.254.6/30
+interface Vlan4002
+   vrf PROD
+   ip address 10.6.254.6/30
+FW1
 !
-R1
+zone DEV
+zone STAGE
+zone PROD
 !
-interface GigabitEthernet0/0
- no shutdown         
-interface GigabitEthernet0/0.1000
- encapsulation dot1Q 1000
- ip vrf forwarding SERVICE-1
- ip address 10.4.255.2 255.255.255.252
-interface GigabitEthernet0/0.2000
- encapsulation dot1Q 2000
- ip vrf forwarding SERVICE-2
- ip address 10.5.255.2 255.255.255.252
-!
-interface GigabitEthernet0/1
- no shutdown 
-interface GigabitEthernet0/1.1001
- encapsulation dot1Q 1001
- ip vrf forwarding SERVICE-1
- ip address 10.4.255.6 255.255.255.252
-interface GigabitEthernet0/1.2001
- encapsulation dot1Q 2001
- ip vrf forwarding SERVICE-2
- ip address 10.5.255.6 255.255.255.252
+interface GigabitEthernet0/0.3000
+ vlan 3000
+ nameif DEV1
+ security-level 30
+ zone-member DEV
+ ip address 10.4.254.1 255.255.255.252 
+interface GigabitEthernet0/0.3001
+ vlan 3001
+ nameif STAGE1
+ security-level 60
+ zone-member STAGE
+ ip address 10.5.254.1 255.255.255.252 
+interface GigabitEthernet0/0.3002
+ vlan 3002
+ nameif PROD1
+ security-level 90
+ zone-member PROD
+ ip address 10.6.254.1 255.255.255.252 
+interface GigabitEthernet0/1.4000
+ vlan 4000
+ nameif DEV2
+ security-level 30
+ zone-member DEV
+ ip address 10.4.254.5 255.255.255.252 
+interface GigabitEthernet0/1.4001
+ vlan 4001
+ nameif STAGE2
+ security-level 60
+ zone-member STAGE
+ ip address 10.5.254.5 255.255.255.252 
+interface GigabitEthernet0/1.4002
+ vlan 4002
+ nameif PROD2
+ security-level 90
+ zone-member PROD
+ ip address 10.6.254.5 255.255.255.252 
 !
 ```
 
