@@ -12,6 +12,42 @@
 Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
 
 ![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/diplom/screenshots/Topology.PNG)  
+## Адресное пространство для сети
+Адресацию для АСО я переиспользовал из работы "[Проектирование адресного пространства](https://github.com/Vorobey1/otus-dc-network-design/edit/main/lab1/README.md)".
+
+<details>
+<summary>show ip route vrf SERVICE-2</summary>
+
+|Device |Loopback    |
+|:-----:|:----------:|
+|Spine1 |10.0.1.0/32 |
+|Spine2 |10.0.2.0/32 |
+|Leaf1  |10.0.0.1/32 |
+|Leaf2  |10.0.0.2/32 |
+|Leaf3  |10.0.0.3/32 |
+|Leaf4  |10.0.0.4/32 |
+|Leaf3-4|10.1.3.4/32 |
+
+|p2p         |Spine1      |Spine2      |
+|:----------:|:----------:|:----------:|
+|Leaf1       |10.2.1.0/31 |10.2.2.0/31 |
+|Leaf2       |10.2.1.2/31 |10.2.2.2/31 |
+|Leaf3       |10.2.1.4/31 |10.2.2.4/31 |
+|Leaf4       |10.2.1.6/31 |10.2.2.6/31 |
+
+|Device  |Ip-address  |
+|:------:|:----------:|
+|Client1 |10.4.0.1/24 |
+|Client2 |10.4.1.2/24 |
+|Client3 |10.4.0.3/24 |
+|Client4 |10.4.2.4/24 |
+
+|VRF         |IP Pool     |
+|:----------:|:----------:|
+|SERVICE-1   |10.4.0.0/16 |
+|SERVICE-2   |10.5.0.0/16 |
+</details>
+
 **FW1**
 ```
 !
