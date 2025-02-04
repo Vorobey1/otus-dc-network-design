@@ -447,9 +447,6 @@ Sending 5, 100-byte ICMP Echos to 10.5.0.1, timeout is 2 seconds:
 !!!!!
 Success rate is 100 percent (5/5), round-trip min/avg/max = 25/31/48 ms
 ```
-Client3 traceroute Client1
-```
-```
 Client1 ping Client3 (Правильно что нет пинга: меньше security-level)
 ```
 Client1#ping 10.6.0.1 so 10.4.0.1
