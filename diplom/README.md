@@ -232,14 +232,17 @@ router bgp 64086.60001
    vrf DEV
       neighbor 10.4.254.1 remote-as 64086.59998
       neighbor 10.4.254.1 route-map EX_MACIP_RM out
+      aggregate-address 10.4.0.0/16 summary-only
       redistribute connected
    vrf PROD
       neighbor 10.6.254.1 remote-as 64086.59998
       neighbor 10.6.254.1 route-map EX_MACIP_RM out
+      aggregate-address 10.6.0.0/16 summary-only
       redistribute connected
    vrf STAGE
       neighbor 10.5.254.1 remote-as 64086.59998
       neighbor 10.5.254.1 route-map EX_MACIP_RM out
+      aggregate-address 10.5.0.0/16 summary-only
       redistribute connected
 !
 BLeaf14
@@ -254,14 +257,17 @@ router bgp 64086.60001
    vrf DEV
       neighbor 10.4.254.5 remote-as 64086.59998
       neighbor 10.4.254.5 route-map EX_MACIP_RM out
+      aggregate-address 10.4.0.0/16 summary-only
       redistribute connected
    vrf PROD
       neighbor 10.6.254.5 remote-as 64086.59998
       neighbor 10.6.254.5 route-map EX_MACIP_RM out
+      aggregate-address 10.6.0.0/16 summary-only
       redistribute connected
    vrf STAGE
       neighbor 10.5.254.5 remote-as 64086.59998
       neighbor 10.5.254.5 route-map EX_MACIP_RM out
+      aggregate-address 10.5.0.0/16 summary-only
       redistribute connected
 !
 ```
@@ -296,6 +302,7 @@ router bgp 64086.59998
  exit-address-family
 !
 ```
+## Выводы show commands после настройки маршрутизаци между VRF
 
 **FW1**
 ```
