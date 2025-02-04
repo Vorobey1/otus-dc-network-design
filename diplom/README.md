@@ -79,7 +79,33 @@
 |PROD        |10.14.0.0/16 |
 </details>
 
-## Настроийка маршрутизации между VRF чере Firewall
+## Настройка маршрутизации между VRF чере Firewall
+В качестве внешнего устройства я использовал Firewall Cisco ASA (FW). FW будет выполнять Route Leaking между VRF-ами: DEV, STAGE, PROD. 
+Для этого необходимо настроить BGP соседство в каждом VRF между Leaf3/Leaf4 и FW. FW будет всю маршрутную информацию собирать в GRT.
+
+Настраиваем VRF
+```
+Leaf13/Leaf14
+!
+vrf instance DEV
+vrf instance STAGE
+vrf instance PROD
+!
+ip routing vrf DEV
+ip routing vrf STAGE
+ip routing vrf PROD
+!
+Leaf23/Leaf24
+!
+vrf instance DEV
+vrf instance STAGE
+vrf instance PROD
+!
+ip routing vrf DEV
+ip routing vrf STAGE
+ip routing vrf PROD
+!
+```
 
 **FW1**
 ```
