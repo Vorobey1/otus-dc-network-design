@@ -539,6 +539,124 @@ interface Vlan2112
    vrf PROD
    ip address 10.14.255.6/30
 !
+L3
+!
+interface GigabitEthernet0/0.2000
+ encapsulation dot1Q 2000
+ ip vrf forwarding DEV
+ ip address 10.4.255.1 255.255.255.252
+interface GigabitEthernet0/0.2001
+ encapsulation dot1Q 2001
+ ip vrf forwarding STAGE
+ ip address 10.5.255.1 255.255.255.252
+interface GigabitEthernet0/0.2002
+ encapsulation dot1Q 2002
+ ip vrf forwarding PROD
+ ip address 10.6.255.1 255.255.255.252
+interface GigabitEthernet0/1.2010
+ encapsulation dot1Q 2010
+ ip vrf forwarding DEV
+ ip address 10.4.255.5 255.255.255.252
+interface GigabitEthernet0/1.2011
+ encapsulation dot1Q 2011
+ ip vrf forwarding STAGE
+ ip address 10.5.255.5 255.255.255.252
+interface GigabitEthernet0/1.2012
+ encapsulation dot1Q 2012
+ ip vrf forwarding PROD
+ ip address 10.6.255.5 255.255.255.252
+interface GigabitEthernet0/2.2100
+ encapsulation dot1Q 2100
+ ip vrf forwarding DEV
+ ip address 10.12.255.1 255.255.255.252
+interface GigabitEthernet0/2.2101
+ encapsulation dot1Q 2101
+ ip vrf forwarding STAGE
+ ip address 10.13.255.1 255.255.255.252
+interface GigabitEthernet0/2.2102
+ encapsulation dot1Q 2102
+ ip vrf forwarding PROD
+ ip address 10.14.255.1 255.255.255.252
+interface GigabitEthernet0/3.2110
+ encapsulation dot1Q 2110
+ ip vrf forwarding DEV
+ ip address 10.12.255.5 255.255.255.252
+interface GigabitEthernet0/3.2111
+ encapsulation dot1Q 2111
+ ip vrf forwarding STAGE
+ ip address 10.13.255.5 255.255.255.252
+interface GigabitEthernet0/3.2112
+ encapsulation dot1Q 2112
+ ip vrf forwarding PROD
+ ip address 10.14.255.5 255.255.255.252
+!
+```
+Настраиваем eBGP в каждом VRF на BLeaf13, BLeaf14, BLeaf23, BLeaf24
+```
+Bleaf13
+!
+router bgp 64086.60001
+   vrf DEV
+      neighbor 10.4.255.1 remote-as 64086.59999
+      aggregate-address 10.4.0.0/16 summary-only
+      redistribute connected
+   vrf PROD
+      neighbor 10.6.255.1 remote-as 64086.59999
+      aggregate-address 10.6.0.0/16 summary-only
+      redistribute connected
+   vrf STAGE
+      neighbor 10.5.255.1 remote-as 64086.59999
+      aggregate-address 10.5.0.0/16 summary-only
+      redistribute connected
+!
+Bleaf14
+!
+router bgp 64086.60001
+ vrf DEV
+      neighbor 10.4.255.5 remote-as 64086.59999
+      aggregate-address 10.4.0.0/16 summary-only
+      redistribute connected
+   vrf PROD
+      neighbor 10.6.255.5 remote-as 64086.59999
+      aggregate-address 10.6.0.0/16 summary-only
+      redistribute connected
+   vrf STAGE
+      neighbor 10.5.255.5 remote-as 64086.59999
+      aggregate-address 10.5.0.0/16 summary-only
+      redistribute connected
+!
+Bleaf23
+!
+router bgp 64086.60002
+   vrf DEV
+      neighbor 10.12.255.1 remote-as 64086.59999
+      aggregate-address 10.12.0.0/16 summary-only
+      redistribute connected
+   vrf PROD
+      neighbor 10.14.255.1 remote-as 64086.59999
+      aggregate-address 10.14.0.0/16 summary-only
+      redistribute connected
+   vrf STAGE
+      neighbor 10.13.255.1 remote-as 64086.59999
+      aggregate-address 10.13.0.0/16 summary-only
+      redistribute connected
+!
+Bleaf24
+!
+router bgp 64086.60002
+   vrf DEV
+      neighbor 10.4.255.5 remote-as 64086.59999
+      aggregate-address 10.4.0.0/16 as-set summary-only
+      redistribute connected
+   vrf PROD
+      neighbor 10.6.255.5 remote-as 64086.59999
+      aggregate-address 10.6.0.0/16 summary-only
+      redistribute connected
+   vrf STAGE
+      neighbor 10.5.255.5 remote-as 64086.59999
+      aggregate-address 10.5.0.0/16 summary-only
+      redistribute connected
+!
 ```
 
 **FW1**
