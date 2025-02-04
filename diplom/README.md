@@ -190,28 +190,6 @@ interface Vxlan1
    vxlan vrf PROD vni 3000
    vxlan vrf STAGE vni 2000
 !
-router bgp 64086.60003
-   vlan 10
-      rd auto
-      route-target both 10:10010
-      redistribute learned
-   vlan 11
-      rd auto
-      route-target both 11:10011
-      redistribute learned
-   vlan 20
-      rd auto
-      route-target both 20:10020
-      redistribute learned
-   vrf SERVICE-1
-      rd 10.0.0.3:1000
-      route-target import evpn 1:1000
-      route-target export evpn 1:1000
-   vrf SERVICE-2
-      rd 10.0.0.3:2000
-      route-target import evpn 2:2000
-      route-target export evpn 2:2000
-!
 router bgp 64086.60001
    vlan 10
       rd auto
