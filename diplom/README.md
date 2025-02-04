@@ -16,7 +16,7 @@
 Адресацию для АСО я переиспользовал из работы "[Проектирование адресного пространства](https://github.com/Vorobey1/otus-dc-network-design/edit/main/lab1/README.md)".
 
 <details>
-<summary>show ip route vrf SERVICE-2</summary>
+<summary>Адресное пространство POD1</summary>
 
 |Device |Loopback    |
 |:-----:|:----------:|
