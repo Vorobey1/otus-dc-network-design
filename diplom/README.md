@@ -9,7 +9,7 @@
 7. Конфигурация АСО
 
 ## Топология сети CLOS
-Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
+Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS, FW - ASAv, L3VPN - Cisco vIOS Router.
 
 ![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/diplom/screenshots/Topology.PNG)  
 ## Адресное пространство для сети
