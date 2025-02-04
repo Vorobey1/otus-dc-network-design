@@ -207,18 +207,65 @@ router bgp 64086.60001
       rd 10.0.0.3:1000
       route-target import evpn 1:1000
       route-target export evpn 1:1000
-   !
    vrf PROD
       rd 10.0.0.3:3000
       route-target import evpn 3:3000
       route-target export evpn 3:3000
-   !
    vrf STAGE
       rd 10.0.0.3:2000
       route-target import evpn 2:2000
       route-target export evpn 2:2000
 !
 ```
+
+Настраиваем eBGP в каждом VRF на BLeaf13 и BLeaf14.  Для уменьшения маршрутной информации настроим route-map, которая будет убирать из аннонсов префиксы /32
+```
+Bleaf13
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60001
+   vrf DEV
+      neighbor 10.4.254.1 remote-as 64086.59998
+      neighbor 10.4.254.1 route-map EX_MACIP_RM out
+      redistribute connected
+   vrf PROD
+      neighbor 10.6.254.1 remote-as 64086.59998
+      neighbor 10.6.254.1 route-map EX_MACIP_RM out
+      redistribute connected
+   vrf STAGE
+      neighbor 10.5.254.1 remote-as 64086.59998
+      neighbor 10.5.254.1 route-map EX_MACIP_RM out
+      redistribute connected
+!
+BLeaf14
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60001
+   vrf DEV
+      neighbor 10.4.254.5 remote-as 64086.59998
+      neighbor 10.4.254.5 route-map EX_MACIP_RM out
+      redistribute connected
+   vrf PROD
+      neighbor 10.6.254.5 remote-as 64086.59998
+      neighbor 10.6.254.5 route-map EX_MACIP_RM out
+      redistribute connected
+   vrf STAGE
+      neighbor 10.5.254.5 remote-as 64086.59998
+      neighbor 10.5.254.5 route-map EX_MACIP_RM out
+      redistribute connected
+!
+```
+
 **FW1**
 ```
 !
