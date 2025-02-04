@@ -927,3 +927,117 @@ Packet sent with a source address of 10.12.0.1
 .....
 Success rate is 0 percent (0/5)
 ```
+## Конфигурация АСО
+**POD1**
+<details>
+<summary>Spine11</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname Spine11
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.1.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.2.1.5/31
+!
+interface Ethernet4
+   no switchport
+   ip address 10.2.1.7/31
+!
+interface Loopback0
+   ip address 10.0.1.0/32
+!
+ip routing
+!
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000097 result accept
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.1.0
+   timers bgp 3 9
+   maximum-paths 3
+   bgp listen range 10.2.1.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF route-reflector-client
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      neighbor LEAF activate
+      neighbor LEAF next-hop-self
+      network 10.0.1.0/32
+!
+```
+</details>
+<details>
+<summary>Spine12</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname Spine12
+!
+spanning-tree mode mstp
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.2.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.2.2.5/31
+!
+interface Ethernet4
+   no switchport
+   ip address 10.2.2.7/31
+!
+interface Loopback0
+   ip address 10.0.2.0/32
+!
+ip routing
+!
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000097 result accept
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.2.0
+   timers bgp 3 9
+   maximum-paths 3
+   bgp listen range 10.2.2.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF route-reflector-client
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      neighbor LEAF activate
+      neighbor LEAF next-hop-self
+      network 10.0.2.0/32
+!
+```
+</details>
