@@ -712,3 +712,179 @@ router bgp 64086.59999
  exit-address-family
 !
 ```
+## Выводы show commands после настройки Multi-Fabric
+**L3**
+<details>
+<summary>show ip route vrf DEV</summary>
+
+```
+L3#show ip route vrf DEV
+Gateway of last resort is not set
+B*    0.0.0.0/0 [20/0] via 10.4.255.6, 00:29:52
+                [20/0] via 10.4.255.2, 00:29:52
+      10.0.0.0/8 is variably subnetted, 12 subnets, 4 masks
+B        10.4.0.0/16 [20/0] via 10.4.255.6, 00:29:52
+                     [20/0] via 10.4.255.2, 00:29:52
+C        10.4.255.0/30 is directly connected, GigabitEthernet0/0.2000
+L        10.4.255.1/32 is directly connected, GigabitEthernet0/0.2000
+C        10.4.255.4/30 is directly connected, GigabitEthernet0/1.2010
+L        10.4.255.5/32 is directly connected, GigabitEthernet0/1.2010
+B        10.12.0.0/16 [20/0] via 10.12.255.6, 00:19:43
+                      [20/0] via 10.12.255.2, 00:19:43
+B        10.12.0.0/24 [20/0] via 10.12.255.6, 00:19:43
+B        10.12.254.4/30 [20/0] via 10.12.255.6, 00:19:43
+C        10.12.255.0/30 is directly connected, GigabitEthernet0/2.2100
+L        10.12.255.1/32 is directly connected, GigabitEthernet0/2.2100
+C        10.12.255.4/30 is directly connected, GigabitEthernet0/3.2110
+L        10.12.255.5/32 is directly connected, GigabitEthernet0/3.2110
+```
+</details>
+
+<details>
+<summary>show ip route vrf STAGE</summary>
+
+```
+L3#show ip route vrf STAGE
+Gateway of last resort is not set
+B*    0.0.0.0/0 [20/0] via 10.5.255.6, 00:31:06
+                [20/0] via 10.5.255.2, 00:31:06
+      10.0.0.0/8 is variably subnetted, 12 subnets, 4 masks
+B        10.5.0.0/16 [20/0] via 10.5.255.6, 00:31:06
+                     [20/0] via 10.5.255.2, 00:31:06
+C        10.5.255.0/30 is directly connected, GigabitEthernet0/0.2001
+L        10.5.255.1/32 is directly connected, GigabitEthernet0/0.2001
+C        10.5.255.4/30 is directly connected, GigabitEthernet0/1.2011
+L        10.5.255.5/32 is directly connected, GigabitEthernet0/1.2011
+B        10.13.0.0/16 [20/0] via 10.13.255.6, 00:06:58
+                      [20/0] via 10.13.255.2, 00:06:58
+B        10.13.0.0/24 [20/0] via 10.13.255.6, 00:06:58
+B        10.13.254.4/30 [20/0] via 10.13.255.6, 00:06:58
+C        10.13.255.0/30 is directly connected, GigabitEthernet0/2.2101
+L        10.13.255.1/32 is directly connected, GigabitEthernet0/2.2101
+C        10.13.255.4/30 is directly connected, GigabitEthernet0/3.2111
+L        10.13.255.5/32 is directly connected, GigabitEthernet0/3.2111
+```
+</details>
+
+<details>
+<summary>show ip route vrf PROD</summary>
+
+```
+L3#show ip route vrf PROD
+Gateway of last resort is not set
+B*    0.0.0.0/0 [20/0] via 10.6.255.6, 00:32:05
+                [20/0] via 10.6.255.2, 00:32:05
+      10.0.0.0/8 is variably subnetted, 12 subnets, 4 masks
+B        10.6.0.0/16 [20/0] via 10.6.255.6, 00:32:05
+                     [20/0] via 10.6.255.2, 00:32:05
+C        10.6.255.0/30 is directly connected, GigabitEthernet0/0.2002
+L        10.6.255.1/32 is directly connected, GigabitEthernet0/0.2002
+C        10.6.255.4/30 is directly connected, GigabitEthernet0/1.2012
+L        10.6.255.5/32 is directly connected, GigabitEthernet0/1.2012
+B        10.14.0.0/16 [20/0] via 10.14.255.6, 00:21:56
+                      [20/0] via 10.14.255.2, 00:21:56
+B        10.14.0.0/24 [20/0] via 10.14.255.6, 00:21:56
+B        10.14.254.4/30 [20/0] via 10.14.255.6, 00:21:56
+C        10.14.255.0/30 is directly connected, GigabitEthernet0/2.2102
+L        10.14.255.1/32 is directly connected, GigabitEthernet0/2.2102
+C        10.14.255.4/30 is directly connected, GigabitEthernet0/3.2112
+L        10.14.255.5/32 is directly connected, GigabitEthernet0/3.2112
+```
+</details>
+
+**Leaf11**
+<details>
+<summary>show ip route vrf DEV</summary>
+
+```
+Leaf11#show ip route vrf DEV
+Gateway of last resort is not set
+ B I      0.0.0.0/0 [200/0] via VTEP 10.0.0.4 VNI 1000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                            via VTEP 10.0.0.3 VNI 1000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.4.0.0/24 is directly connected, Vlan10
+ B I      10.4.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 1000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                              via VTEP 10.0.0.3 VNI 1000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ B I      10.12.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 1000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                               via VTEP 10.0.0.3 VNI 1000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show ip route vrf STAGE</summary>
+
+```
+Leaf11#show ip route vrf STAGE
+Gateway of last resort is not set
+ B I      0.0.0.0/0 [200/0] via VTEP 10.0.0.4 VNI 2000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                            via VTEP 10.0.0.3 VNI 2000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.5.0.0/24 is directly connected, Vlan11
+ B I      10.5.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 2000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                              via VTEP 10.0.0.3 VNI 2000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ B I      10.13.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 2000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                               via VTEP 10.0.0.3 VNI 2000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show ip route vrf PROD</summary>
+
+```
+Leaf11#show ip route vrf PROD
+Gateway of last resort is not set
+ B I      0.0.0.0/0 [200/0] via VTEP 10.0.0.4 VNI 3000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                            via VTEP 10.0.0.3 VNI 3000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.6.0.0/24 is directly connected, Vlan20
+ B I      10.6.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 3000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                              via VTEP 10.0.0.3 VNI 3000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ B I      10.14.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 3000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                               via VTEP 10.0.0.3 VNI 3000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+**Leaf21**
+<details>
+<summary>show ip route vrf DEV</summary>
+
+```
+Leaf21#show ip route vrf DEV
+ B I      0.0.0.0/0 [200/0] via VTEP 10.8.0.3 VNI 4000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                            via VTEP 10.8.0.4 VNI 4000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+ B I      10.4.0.0/16 [200/0] via VTEP 10.8.0.3 VNI 4000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                              via VTEP 10.8.0.4 VNI 4000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+ C        10.12.0.0/24 is directly connected, Vlan110
+ B I      10.12.0.0/16 [200/0] via VTEP 10.8.0.3 VNI 4000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                               via VTEP 10.8.0.4 VNI 4000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show ip route vrf STAGE</summary>
+
+```
+Leaf21#show ip route vrf STAGE
+Gateway of last resort is not set
+ B I      0.0.0.0/0 [200/0] via VTEP 10.8.0.3 VNI 5000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                            via VTEP 10.8.0.4 VNI 5000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+ B I      10.5.0.0/16 [200/0] via VTEP 10.8.0.3 VNI 5000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                              via VTEP 10.8.0.4 VNI 5000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+ C        10.13.0.0/24 is directly connected, Vlan111
+ B I      10.13.0.0/16 [200/0] via VTEP 10.8.0.3 VNI 5000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                               via VTEP 10.8.0.4 VNI 5000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show ip route vrf PROD</summary>
+
+```
+Leaf21#show ip route vrf PROD
+Gateway of last resort is not set
+ B I      0.0.0.0/0 [200/0] via VTEP 10.8.0.3 VNI 6000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                            via VTEP 10.8.0.4 VNI 6000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+ B I      10.6.0.0/16 [200/0] via VTEP 10.8.0.3 VNI 6000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                              via VTEP 10.8.0.4 VNI 6000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+ C        10.14.0.0/24 is directly connected, Vlan120
+ B I      10.14.0.0/16 [200/0] via VTEP 10.8.0.3 VNI 6000 router-mac 50:00:00:d8:ac:19 local-interface Vxlan1
+                               via VTEP 10.8.0.4 VNI 6000 router-mac 50:00:00:ba:c6:f8 local-interface Vxlan1
+```
+</details>
