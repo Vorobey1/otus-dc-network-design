@@ -106,7 +106,6 @@ ip routing vrf STAGE
 ip routing vrf PROD
 !
 ```
-
 Настраиваем SVI и сабинтерфейсы на BLeaf13/BLeaf14 и FW1 соответственно
 ```
 BLeaf13
@@ -180,8 +179,68 @@ interface GigabitEthernet0/1.4002
  ip address 10.6.254.5 255.255.255.252 
 !
 ```
-
-
+На BLeaf13, BLeaf14 создаем все l2vni и l3vni в нашем POD
+```
+!
+interface Vxlan1
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf DEV vni 1000
+   vxlan vrf PROD vni 3000
+   vxlan vrf STAGE vni 2000
+!
+router bgp 64086.60003
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   vrf SERVICE-1
+      rd 10.0.0.3:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+   vrf SERVICE-2
+      rd 10.0.0.3:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+!
+router bgp 64086.60001
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   vrf DEV
+      rd 10.0.0.3:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+   !
+   vrf PROD
+      rd 10.0.0.3:3000
+      route-target import evpn 3:3000
+      route-target export evpn 3:3000
+   !
+   vrf STAGE
+      rd 10.0.0.3:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+!
+```
 **FW1**
 ```
 !
