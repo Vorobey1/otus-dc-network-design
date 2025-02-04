@@ -481,8 +481,65 @@ ip vrf STAGE
  route-target import 5:5000
 !
 ```
-
-
+Настраиваем SVI и сабинтерфейсы на BLeaf13/BLeaf14/BLeaf23/BLeaf24 и R1 соответственно
+```
+BLeaf13
+!
+vlan 2000,2001,2002
+!
+interface Vlan2000
+   vrf DEV
+   ip address 10.4.255.2/30
+interface Vlan2001
+   vrf STAGE
+   ip address 10.5.255.2/30
+interface Vlan2002
+   vrf PROD
+   ip address 10.6.255.2/30
+!
+BLeaf14
+!
+vlan 2010,2011,2012
+!
+interface Vlan2010
+   vrf DEV
+   ip address 10.4.255.6/30
+interface Vlan2011
+   vrf STAGE
+   ip address 10.5.255.6/30
+interface Vlan2012
+   vrf PROD
+   ip address 10.6.255.6/30
+!
+BLeaf23
+!
+vlan 2100,2101,2102
+!
+interface Vlan2100
+   vrf DEV
+   ip address 10.12.255.2/30
+interface Vlan2101
+   vrf STAGE
+   ip address 10.13.255.2/30
+interface Vlan2102
+   vrf PROD
+   ip address 10.14.255.2/30
+!
+BLeaf24
+!
+vlan 2110,2111,2112
+!
+interface Vlan2110
+   vrf DEV
+   ip address 10.12.255.6/30
+interface Vlan2111
+   vrf STAGE
+   ip address 10.13.255.6/30
+interface Vlan2112
+   vrf PROD
+   ip address 10.14.255.6/30
+!
+```
 
 **FW1**
 ```
