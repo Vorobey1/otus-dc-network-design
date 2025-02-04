@@ -303,7 +303,34 @@ router bgp 64086.59998
 !
 ```
 ## Выводы show commands после настройки маршрутизаци между VRF
+**FW1**
+<details>
+<summary>show route</summary>
 
+```
+R1#show ip route vrf SERVICE-1
+Gateway of last resort is not set
+B        10.4.0.0 255.255.0.0 [20/0] via 10.4.254.6, 01:51:16
+                              [20/0] via 10.4.254.2, 01:51:16
+C        10.4.254.0 255.255.255.252 is directly connected, DEV1
+L        10.4.254.1 255.255.255.255 is directly connected, DEV1
+C        10.4.254.4 255.255.255.252 is directly connected, DEV2
+L        10.4.254.5 255.255.255.255 is directly connected, DEV2
+B        10.5.0.0 255.255.0.0 [20/0] via 10.5.254.6, 01:51:15
+                              [20/0] via 10.5.254.2, 01:51:15
+C        10.5.254.0 255.255.255.252 is directly connected, STAGE1
+L        10.5.254.1 255.255.255.255 is directly connected, STAGE1
+C        10.5.254.4 255.255.255.252 is directly connected, STAGE2
+L        10.5.254.5 255.255.255.255 is directly connected, STAGE2
+B        10.6.0.0 255.255.0.0 [20/0] via 10.6.254.6, 01:51:16
+                              [20/0] via 10.6.254.2, 01:51:16
+C        10.6.254.0 255.255.255.252 is directly connected, PROD1
+L        10.6.254.1 255.255.255.255 is directly connected, PROD1
+C        10.6.254.4 255.255.255.252 is directly connected, PROD2
+L        10.6.254.5 255.255.255.255 is directly connected, PROD2
+```
+</details>
+   
 **FW1**
 ```
 !
