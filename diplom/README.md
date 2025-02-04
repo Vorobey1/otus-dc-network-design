@@ -6,7 +6,12 @@
 4. Настроииь Multi-Fabric
 5. Выводы show commands
 6. Тестирование связности
-7. Конфигурация АСО  
+7. Конфигурация АСО
+
+## Топология сети CLOS
+Топология сети была собрана в эмуляторе EVE-NG. В качестве оборудования Leaf и Spine используется AristaEOS.
+
+![alt-текст](https://github.com/Vorobey1/otus-dc-network-design/blob/main/diplom/screenshots/Topology.PNG)  
 **FW1**
 ```
 !
