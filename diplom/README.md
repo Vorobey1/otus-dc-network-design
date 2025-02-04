@@ -1041,3 +1041,772 @@ router bgp 64086.60001
 !
 ```
 </details>
+<details>
+<summary>Leaf11</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf11
+!
+vlan 10-11,20
+!
+vrf instance DEV
+!
+vrf instance PROD
+!
+vrf instance STAGE
+!
+interface Port-Channel1
+   description Client1
+   switchport access vlan 10
+   !
+   evpn ethernet-segment
+      identifier 0011:1111:1111:1111:1111
+      route-target import 11:11:11:11:11:11
+   lacp system-id 1111.1111.1111
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel2
+   description Client2
+   switchport access vlan 11
+   !
+   evpn ethernet-segment
+      identifier 0022:2222:2222:2222:2222
+      route-target import 22:22:22:22:22:22
+   lacp system-id 2222.2222.2222
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel3
+   description Client3
+   switchport access vlan 20
+   !
+   evpn ethernet-segment
+      identifier 0033:3333:3333:3333:3333
+      route-target import 33:33:33:33:33:33
+   lacp system-id 3333.3333.3333
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.0/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.0/31
+!
+interface Ethernet6
+   channel-group 1 mode active
+!
+interface Ethernet7
+   channel-group 2 mode active
+!
+interface Ethernet8
+   channel-group 3 mode active
+!
+interface Loopback0
+   ip address 10.0.0.1/32
+!
+interface Vlan10
+   vrf DEV
+   ip address 10.4.0.249/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf STAGE
+   ip address 10.5.0.249/24
+   ip virtual-router address 10.5.0.254
+!
+interface Vlan20
+   vrf PROD
+   ip address 10.6.0.249/24
+   ip virtual-router address 10.6.0.254
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf DEV vni 1000
+   vxlan vrf PROD vni 3000
+   vxlan vrf STAGE vni 2000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf DEV
+ip routing vrf PROD
+ip routing vrf STAGE
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.0.1
+   timers bgp 3 9
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60001
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.1 peer group SPINE
+   neighbor 10.2.2.1 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.1/32
+   !
+   vrf DEV
+      rd 10.0.0.1:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+   !
+   vrf PROD
+      rd 10.0.0.1:3000
+      route-target import evpn 3:3000
+      route-target export evpn 3:3000
+   !
+   vrf STAGE
+      rd 10.0.0.1:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+!
+```
+</details>
+<details>
+<summary>Leaf12</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname Leaf12
+!
+vlan 10-11,20
+!
+vrf instance DEV
+!
+vrf instance PROD
+!
+vrf instance STAGE
+!
+interface Port-Channel1
+   description Client1
+   switchport access vlan 10
+   !
+   evpn ethernet-segment
+      identifier 0011:1111:1111:1111:1111
+      route-target import 11:11:11:11:11:11
+   lacp system-id 1111.1111.1111
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel2
+   description Client2
+   switchport access vlan 11
+   !
+   evpn ethernet-segment
+      identifier 0022:2222:2222:2222:2222
+      route-target import 22:22:22:22:22:22
+   lacp system-id 2222.2222.2222
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Port-Channel3
+   description Client3
+   switchport access vlan 20
+   !
+   evpn ethernet-segment
+      identifier 0033:3333:3333:3333:3333
+      route-target import 33:33:33:33:33:33
+   lacp system-id 3333.3333.3333
+   spanning-tree portfast
+   spanning-tree bpdufilter enable
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.2/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.2/31
+!
+interface Ethernet6
+   channel-group 1 mode active
+!
+interface Ethernet7
+   channel-group 2 mode active
+!
+interface Ethernet8
+   channel-group 3 mode active
+!
+interface Loopback0
+   ip address 10.0.0.2/32
+!
+interface Vlan10
+   vrf DEV
+   ip address 10.4.0.248/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf STAGE
+   ip address 10.5.0.248/24
+   ip virtual-router address 10.5.0.254
+!
+interface Vlan20
+   vrf PROD
+   ip address 10.6.0.248/24
+   ip virtual-router address 10.6.0.254
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf DEV vni 1000
+   vxlan vrf PROD vni 3000
+   vxlan vrf STAGE vni 2000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf DEV
+ip routing vrf PROD
+ip routing vrf STAGE
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.0.2
+   timers bgp 3 9
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60001
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.3 peer group SPINE
+   neighbor 10.2.2.3 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.2/32
+   !
+   vrf DEV
+      rd 10.0.0.2:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+   !
+   vrf PROD
+      rd 10.0.0.2:3000
+      route-target import evpn 3:3000
+      route-target export evpn 3:3000
+   !
+   vrf STAGE
+      rd 10.0.0.2:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+!
+```
+</details>
+<details>
+<summary>BLeaf13</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname BLeaf13
+!
+vlan 10-11,20,2000-2002,3000-3002
+!
+vrf instance DEV
+!
+vrf instance PROD
+!
+vrf instance STAGE
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.4/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.4/31
+!
+interface Ethernet3
+   switchport trunk allowed vlan 2000-2002
+   switchport mode trunk
+!
+interface Ethernet8
+   switchport trunk allowed vlan 3000-3002
+   switchport mode trunk
+!
+interface Loopback0
+   ip address 10.0.0.3/32
+!
+interface Vlan10
+   vrf DEV
+   ip address 10.4.0.253/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf STAGE
+   ip address 10.5.0.253/24
+   ip virtual-router address 10.5.0.254
+!
+interface Vlan20
+   vrf PROD
+   ip address 10.6.0.253/24
+   ip virtual-router address 10.6.0.254
+!
+interface Vlan2000
+   vrf DEV
+   ip address 10.4.255.2/30
+!
+interface Vlan2001
+   vrf STAGE
+   ip address 10.5.255.2/30
+!
+interface Vlan2002
+   vrf PROD
+   ip address 10.6.255.2/30
+!
+interface Vlan3000
+   vrf DEV
+   ip address 10.4.254.2/30
+!
+interface Vlan3001
+   vrf STAGE
+   ip address 10.5.254.2/30
+!
+interface Vlan3002
+   vrf PROD
+   ip address 10.6.254.2/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf DEV vni 1000
+   vxlan vrf PROD vni 3000
+   vxlan vrf STAGE vni 2000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf DEV
+ip routing vrf PROD
+ip routing vrf STAGE
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.0.3
+   timers bgp 3 9
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60001
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.5 peer group SPINE
+   neighbor 10.2.2.5 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.3/32
+   !
+   vrf DEV
+      rd 10.0.0.3:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+      neighbor 10.4.254.1 remote-as 64086.59998
+      neighbor 10.4.254.1 route-map EX_MACIP_RM out
+      neighbor 10.4.255.1 remote-as 64086.59999
+      neighbor 10.4.255.1 route-map EX_MACIP_RM out
+      aggregate-address 10.4.0.0/16 as-set summary-only
+      redistribute connected
+   !
+   vrf PROD
+      rd 10.0.0.3:3000
+      route-target import evpn 3:3000
+      route-target export evpn 3:3000
+      neighbor 10.6.254.1 remote-as 64086.59998
+      neighbor 10.6.254.1 route-map EX_MACIP_RM out
+      neighbor 10.6.255.1 remote-as 64086.59999
+      neighbor 10.6.255.1 route-map EX_MACIP_RM out
+      aggregate-address 10.6.0.0/16 summary-only
+      redistribute connected
+   !
+   vrf STAGE
+      rd 10.0.0.3:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+      neighbor 10.5.254.1 remote-as 64086.59998
+      neighbor 10.5.254.1 route-map EX_MACIP_RM out
+      neighbor 10.5.255.1 remote-as 64086.59999
+      neighbor 10.5.255.1 route-map EX_MACIP_RM out
+      aggregate-address 10.5.0.0/16 summary-only
+      redistribute connected
+!
+```
+</details>
+<details>
+<summary>BLeaf14</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname BLeaf14
+!
+vlan 10-11,20,2010-2012,4000-4002
+!
+vrf instance DEV
+!
+vrf instance PROD
+!
+vrf instance STAGE
+!
+interface Ethernet1
+   no switchport
+   ip address 10.2.1.6/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.2.2.6/31
+!
+interface Ethernet3
+   switchport trunk allowed vlan 2010-2012
+   switchport mode trunk
+!
+interface Ethernet8
+   switchport trunk allowed vlan 4000-4002
+   switchport mode trunk
+!
+interface Loopback0
+   ip address 10.0.0.4/32
+!
+interface Vlan10
+   vrf DEV
+   ip address 10.4.0.252/24
+   ip virtual-router address 10.4.0.254
+!
+interface Vlan11
+   vrf STAGE
+   ip address 10.5.0.252/24
+   ip virtual-router address 10.5.0.254
+!
+interface Vlan20
+   vrf PROD
+   ip address 10.6.0.252/24
+   ip virtual-router address 10.6.0.254
+!
+interface Vlan2010
+   vrf DEV
+   ip address 10.4.255.6/30
+!
+interface Vlan2011
+   vrf STAGE
+   ip address 10.5.255.6/30
+!
+interface Vlan2012
+   vrf PROD
+   ip address 10.6.255.6/30
+!
+interface Vlan4000
+   vrf DEV
+   ip address 10.4.254.6/30
+!
+interface Vlan4001
+   vrf STAGE
+   ip address 10.5.254.6/30
+!
+interface Vlan4002
+   vrf PROD
+   ip address 10.6.254.6/30
+!
+interface Vxlan1
+   vxlan source-interface Loopback0
+   vxlan udp-port 4789
+   vxlan vlan 10 vni 10010
+   vxlan vlan 11 vni 10011
+   vxlan vlan 20 vni 10020
+   vxlan vrf DEV vni 1000
+   vxlan vrf PROD vni 3000
+   vxlan vrf STAGE vni 2000
+   vxlan learn-restrict any
+!
+ip virtual-router mac-address 00:00:00:00:00:01
+!
+ip routing
+ip routing vrf DEV
+ip routing vrf PROD
+ip routing vrf STAGE
+!
+ip prefix-list EX_MACIP_PL
+   seq 10 permit 0.0.0.0/0 le 31
+!
+route-map EX_MACIP_RM permit 10
+   match ip address prefix-list EX_MACIP_PL
+!
+router bgp 64086.60001
+   bgp asn notation asdot
+   router-id 10.0.0.4
+   timers bgp 3 9
+   maximum-paths 2
+   neighbor SPINE peer group
+   neighbor SPINE remote-as 64086.60001
+   neighbor SPINE bfd
+   neighbor SPINE password 7 EH+yVyyau5QNVADGud/EtQ==
+   neighbor SPINE send-community extended
+   neighbor 10.2.1.7 peer group SPINE
+   neighbor 10.2.2.7 peer group SPINE
+   !
+   vlan 10
+      rd auto
+      route-target both 10:10010
+      redistribute learned
+   !
+   vlan 11
+      rd auto
+      route-target both 11:10011
+      redistribute learned
+   !
+   vlan 20
+      rd auto
+      route-target both 20:10020
+      redistribute learned
+   !
+   address-family evpn
+      neighbor SPINE activate
+   !
+   address-family ipv4
+      neighbor SPINE activate
+      network 10.0.0.4/32
+   !
+   vrf DEV
+      rd 10.0.0.4:1000
+      route-target import evpn 1:1000
+      route-target export evpn 1:1000
+      neighbor 10.4.254.5 remote-as 64086.59998
+      neighbor 10.4.254.5 route-map EX_MACIP_RM out
+      neighbor 10.4.255.5 remote-as 64086.59999
+      neighbor 10.4.255.5 route-map EX_MACIP_RM out
+      aggregate-address 10.4.0.0/16 as-set summary-only
+      redistribute connected
+   !
+   vrf PROD
+      rd 10.0.0.4:3000
+      route-target import evpn 3:3000
+      route-target export evpn 3:3000
+      neighbor 10.6.254.5 remote-as 64086.59998
+      neighbor 10.6.254.5 route-map EX_MACIP_RM out
+      neighbor 10.6.255.5 remote-as 64086.59999
+      neighbor 10.6.255.5 route-map EX_MACIP_RM out
+      aggregate-address 10.6.0.0/16 summary-only
+      redistribute connected
+   !
+   vrf STAGE
+      rd 10.0.0.4:2000
+      route-target import evpn 2:2000
+      route-target export evpn 2:2000
+      neighbor 10.5.254.5 remote-as 64086.59998
+      neighbor 10.5.254.5 route-map EX_MACIP_RM out
+      neighbor 10.5.255.5 remote-as 64086.59999
+      neighbor 10.5.255.5 route-map EX_MACIP_RM out
+      aggregate-address 10.5.0.0/16 summary-only
+      redistribute connected
+!
+```
+</details>
+<details>
+<summary>BLeaf14</summary>
+
+```
+!
+hostname FW1
+!
+zone DEV
+zone STAGE
+zone PROD
+!
+interface GigabitEthernet0/0.3000
+ vlan 3000
+ nameif DEV1
+ security-level 30
+ zone-member DEV
+ ip address 10.4.254.1 255.255.255.252 
+!
+interface GigabitEthernet0/0.3001
+ vlan 3001
+ nameif STAGE1
+ security-level 60
+ zone-member STAGE
+ ip address 10.5.254.1 255.255.255.252 
+!
+interface GigabitEthernet0/0.3002
+ vlan 3002
+ nameif PROD1
+ security-level 90
+ zone-member PROD
+ ip address 10.6.254.1 255.255.255.252 
+!
+interface GigabitEthernet0/1.4000
+ vlan 4000
+ nameif DEV2
+ security-level 30
+ zone-member DEV
+ ip address 10.4.254.5 255.255.255.252 
+!
+interface GigabitEthernet0/1.4001
+ vlan 4001
+ nameif STAGE2
+ security-level 60
+ zone-member STAGE
+ ip address 10.5.254.5 255.255.255.252 
+!
+interface GigabitEthernet0/1.4002
+ vlan 4002
+ nameif PROD2
+ security-level 90
+ zone-member PROD
+ ip address 10.6.254.5 255.255.255.252 
+!             
+mtu DEV1 1500
+mtu STAGE1 1500
+mtu PROD1 1500
+mtu DEV2 1500
+mtu STAGE2 1500
+mtu PROD2 1500
+router bgp 64086.59998
+ bgp log-neighbor-changes
+ bgp asnotation dot
+ address-family ipv4 unicast
+  neighbor 10.4.254.2 remote-as 64086.60001
+  neighbor 10.4.254.2 activate
+  neighbor 10.4.254.2 default-originate
+  neighbor 10.5.254.2 remote-as 64086.60001
+  neighbor 10.5.254.2 activate
+  neighbor 10.5.254.2 default-originate
+  neighbor 10.6.254.2 remote-as 64086.60001
+  neighbor 10.6.254.2 activate
+  neighbor 10.6.254.2 default-originate
+  neighbor 10.4.254.6 remote-as 64086.60001
+  neighbor 10.4.254.6 activate
+  neighbor 10.4.254.6 default-originate
+  neighbor 10.5.254.6 remote-as 64086.60001
+  neighbor 10.5.254.6 activate
+  neighbor 10.5.254.6 default-originate
+  neighbor 10.6.254.6 remote-as 64086.60001
+  neighbor 10.6.254.6 activate
+  neighbor 10.6.254.6 default-originate
+  maximum-paths 2
+  no auto-summary
+  no synchronization
+ exit-address-family
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+policy-map type inspect dns migrated_dns_map_1
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+  no tcp-inspection
+policy-map global_policy
+ class inspection_default
+  inspect dns migrated_dns_map_1 
+  inspect ftp 
+  inspect h323 h225 
+  inspect h323 ras 
+  inspect ip-options 
+  inspect netbios 
+  inspect rsh 
+  inspect rtsp 
+  inspect skinny  
+  inspect esmtp 
+  inspect sqlnet 
+  inspect sunrpc 
+  inspect tftp 
+  inspect sip  
+  inspect snmp 
+  inspect icmp 
+policy-map type inspect dns migrated_dns_map_2
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+  no tcp-inspection
+!
+service-policy global_policy global
+```
+</details>
