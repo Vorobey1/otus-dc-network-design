@@ -330,7 +330,105 @@ C        10.6.254.4 255.255.255.252 is directly connected, PROD2
 L        10.6.254.5 255.255.255.255 is directly connected, PROD2
 ```
 </details>
-   
+
+**Leaf11**
+<details>
+<summary>show ip route vrf DEV</summary>
+
+```
+Leaf11#show ip route vrf DEV
+ B I      0.0.0.0/0 [200/0] via VTEP 10.0.0.4 VNI 1000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                            via VTEP 10.0.0.3 VNI 1000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.4.0.0/24 is directly connected, Vlan10
+ B I      10.4.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 1000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                              via VTEP 10.0.0.3 VNI 1000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show ip route vrf STAGE</summary>
+
+```
+Leaf1#show ip route vrf STAGE
+ B I      0.0.0.0/0 [200/0] via VTEP 10.0.0.4 VNI 2000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                            via VTEP 10.0.0.3 VNI 2000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.5.0.0/24 is directly connected, Vlan11
+ B I      10.5.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 2000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                              via VTEP 10.0.0.3 VNI 2000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show ip route vrf PROD</summary>
+
+```
+Leaf11#show ip route vrf PROD
+ B I      0.0.0.0/0 [200/0] via VTEP 10.0.0.4 VNI 3000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                            via VTEP 10.0.0.3 VNI 3000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+ C        10.6.0.0/24 is directly connected, Vlan20
+ B I      10.6.0.0/16 [200/0] via VTEP 10.0.0.4 VNI 3000 router-mac 50:00:00:af:d3:f6 local-interface Vxlan1
+                              via VTEP 10.0.0.3 VNI 3000 router-mac 50:00:00:15:f4:e8 local-interface Vxlan1
+```
+</details>
+
+<details>
+<summary>show bgp evpn route-type ip-prefix ipv4</summary>
+
+```
+Leaf11#show bgp evpn route-type ip-prefix ipv4 
+          Network                Next Hop              Metric  LocPref Weight  Path
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 0.0.0.0/0
+                                 10.0.0.3              -       100     0       64086.59998 i Or-ID: 10.0.0.3 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 0.0.0.0/0
+                                 10.0.0.3              -       100     0       64086.59998 i Or-ID: 10.0.0.3 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 0.0.0.0/0
+                                 10.0.0.3              -       100     0       64086.59998 i Or-ID: 10.0.0.3 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 0.0.0.0/0
+                                 10.0.0.3              -       100     0       64086.59998 i Or-ID: 10.0.0.3 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.3:3000 ip-prefix 0.0.0.0/0
+                                 10.0.0.3              -       100     0       64086.59998 i Or-ID: 10.0.0.3 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.3:3000 ip-prefix 0.0.0.0/0
+                                 10.0.0.3              -       100     0       64086.59998 i Or-ID: 10.0.0.3 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 0.0.0.0/0
+                                 10.0.0.4              -       100     0       64086.59998 i Or-ID: 10.0.0.4 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 0.0.0.0/0
+                                 10.0.0.4              -       100     0       64086.59998 i Or-ID: 10.0.0.4 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 0.0.0.0/0
+                                 10.0.0.4              -       100     0       64086.59998 i Or-ID: 10.0.0.4 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 0.0.0.0/0
+                                 10.0.0.4              -       100     0       64086.59998 i Or-ID: 10.0.0.4 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.4:3000 ip-prefix 0.0.0.0/0
+                                 10.0.0.4              -       100     0       64086.59998 i Or-ID: 10.0.0.4 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.4:3000 ip-prefix 0.0.0.0/0
+                                 10.0.0.4              -       100     0       64086.59998 i Or-ID: 10.0.0.4 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.3:1000 ip-prefix 10.4.0.0/16
+                                 10.0.0.3              -       100     0       i Or-ID: 10.0.0.3 C-LST: 10.0.2.0 
+ *  ec    RD: 10.0.0.3:1000 ip-prefix 10.4.0.0/16
+                                 10.0.0.3              -       100     0       i Or-ID: 10.0.0.3 C-LST: 10.0.1.0 
+ * >Ec    RD: 10.0.0.4:1000 ip-prefix 10.4.0.0/16
+                                 10.0.0.4              -       100     0       i Or-ID: 10.0.0.4 C-LST: 10.0.2.0 
+ *  ec    RD: 10.0.0.4:1000 ip-prefix 10.4.0.0/16
+                                 10.0.0.4              -       100     0       i Or-ID: 10.0.0.4 C-LST: 10.0.1.0 
+ * >Ec    RD: 10.0.0.3:2000 ip-prefix 10.5.0.0/16
+                                 10.0.0.3              -       100     0       i Or-ID: 10.0.0.3 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.3:2000 ip-prefix 10.5.0.0/16
+                                 10.0.0.3              -       100     0       i Or-ID: 10.0.0.3 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.4:2000 ip-prefix 10.5.0.0/16
+                                 10.0.0.4              -       100     0       i Or-ID: 10.0.0.4 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.4:2000 ip-prefix 10.5.0.0/16
+                                 10.0.0.4              -       100     0       i Or-ID: 10.0.0.4 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.3:3000 ip-prefix 10.6.0.0/16
+                                 10.0.0.3              -       100     0       i Or-ID: 10.0.0.3 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.3:3000 ip-prefix 10.6.0.0/16
+                                 10.0.0.3              -       100     0       i Or-ID: 10.0.0.3 C-LST: 10.0.2.0 
+ * >Ec    RD: 10.0.0.4:3000 ip-prefix 10.6.0.0/16
+                                 10.0.0.4              -       100     0       i Or-ID: 10.0.0.4 C-LST: 10.0.1.0 
+ *  ec    RD: 10.0.0.4:3000 ip-prefix 10.6.0.0/16
+                                 10.0.0.4              -       100     0       i Or-ID: 10.0.0.4 C-LST: 10.0.2.0 
+```
+</details>
+
+
 **FW1**
 ```
 !
