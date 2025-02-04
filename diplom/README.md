@@ -1690,7 +1690,7 @@ router bgp 64086.60001
 ```
 </details>
 <details>
-<summary>BLeaf14</summary>
+<summary>FW1</summary>
 
 ```
 !
@@ -1808,5 +1808,118 @@ policy-map type inspect dns migrated_dns_map_2
   no tcp-inspection
 !
 service-policy global_policy global
+!
+```
+</details>
+
+**POD2**
+<details>
+<summary>Spine21</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname Spine21
+!
+interface Ethernet1
+   no switchport
+   ip address 10.10.1.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.10.1.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.10.1.5/31
+!
+interface Ethernet4
+   no switchport
+   ip address 10.10.1.7/31
+!
+interface Loopback0
+   ip address 10.8.1.0/32
+!
+ip routing
+!
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000098 result accept
+!
+router bgp 64086.60002
+   bgp asn notation asdot
+   router-id 10.8.1.0
+   timers bgp 3 9
+   maximum-paths 3
+   bgp listen range 10.10.1.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF route-reflector-client
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      neighbor LEAF activate
+      neighbor LEAF next-hop-self
+      network 10.8.1.0/32
+!
+```
+</details>
+<details>
+<summary>Spine22</summary>
+
+```
+!
+service routing protocols model multi-agent
+!
+hostname Spine22
+!
+interface Ethernet1
+   no switchport
+   ip address 10.10.2.1/31
+!
+interface Ethernet2
+   no switchport
+   ip address 10.10.2.3/31
+!
+interface Ethernet3
+   no switchport
+   ip address 10.10.2.5/31
+!
+interface Ethernet4
+   no switchport
+   ip address 10.10.2.7/31
+!
+interface Loopback0
+   ip address 10.8.2.0/32
+!
+ip routing
+!
+peer-filter LEAF_RANGE_ASN
+   10 match as-range 4200000098 result accept
+!
+router bgp 64086.60002
+   bgp asn notation asdot
+   router-id 10.8.2.0
+   timers bgp 3 9
+   maximum-paths 3
+   bgp listen range 10.10.2.0/24 peer-group LEAF peer-filter LEAF_RANGE_ASN
+   neighbor LEAF peer group
+   neighbor LEAF bfd
+   neighbor LEAF route-reflector-client
+   neighbor LEAF password 7 SBL80tRxYfD5nL5xXyMQwQ==
+   neighbor LEAF send-community extended
+   !
+   address-family evpn
+      neighbor LEAF activate
+   !
+   address-family ipv4
+      neighbor LEAF activate
+      neighbor LEAF next-hop-self
+      network 10.8.2.0/32
+!
 ```
 </details>
