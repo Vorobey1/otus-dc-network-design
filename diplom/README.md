@@ -429,7 +429,7 @@ Leaf11#show bgp evpn route-type ip-prefix ipv4
 ```
 </details>
 
-## Тестирование связности
+## Тестирование связности в POD1
 
 Client3 ping Client1
 ```
@@ -455,6 +455,34 @@ Sending 5, 100-byte ICMP Echos to 10.6.0.1, timeout is 2 seconds:
 .....
 Success rate is 0 percent (0/5)
 ```
+## Настрйока Multi-Fabric между POD1 и POD2 
+Multi-Fabric будет представлять из себя L3 Hand-off (Настройка eBGP в каждом VRF: DEV, STAGE, PROD). Предварительно был настроен POD2 по аналогии с POD1, но в своем адресном пространстве.
+
+Настраиваем VRF на L3
+```
+!
+ip vrf DEV
+ rd 10.4.255.255:1
+ route-target export 1:1000
+ route-target export 4:4000
+ route-target import 1:1000
+ route-target import 4:4000
+ip vrf PROD
+ rd 10.4.255.255:3
+ route-target export 3:3000
+ route-target export 6:6000
+ route-target import 3:3000
+ route-target import 6:6000
+ip vrf STAGE
+ rd 10.4.255.255:2
+ route-target export 2:2000
+ route-target export 5:5000
+ route-target import 2:2000
+ route-target import 5:5000
+!
+```
+
+
 
 **FW1**
 ```
