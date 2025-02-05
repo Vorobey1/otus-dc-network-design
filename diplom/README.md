@@ -309,7 +309,7 @@ router bgp 64086.59998
 <summary>show route</summary>
 
 ```
-R1#show ip route vrf SERVICE-1
+FW1#show route
 Gateway of last resort is not set
 B        10.4.0.0 255.255.0.0 [20/0] via 10.4.254.6, 01:51:16
                               [20/0] via 10.4.254.2, 01:51:16
@@ -1113,18 +1113,15 @@ interface Loopback0
 !
 interface Vlan10
    vrf DEV
-   ip address 10.4.0.249/24
-   ip virtual-router address 10.4.0.254
+   ip address virtual 10.4.0.254/24
 !
 interface Vlan11
    vrf STAGE
-   ip address 10.5.0.249/24
-   ip virtual-router address 10.5.0.254
+   ip address virtual 10.5.0.254/24
 !
 interface Vlan20
    vrf PROD
-   ip address 10.6.0.249/24
-   ip virtual-router address 10.6.0.254
+   ip address virtual 10.6.0.254/24
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -1268,18 +1265,15 @@ interface Loopback0
 !
 interface Vlan10
    vrf DEV
-   ip address 10.4.0.248/24
-   ip virtual-router address 10.4.0.254
+   ip address virtual 10.4.0.254/24
 !
 interface Vlan11
    vrf STAGE
-   ip address 10.5.0.248/24
-   ip virtual-router address 10.5.0.254
+   ip address virtual 10.5.0.254/24
 !
 interface Vlan20
    vrf PROD
-   ip address 10.6.0.248/24
-   ip virtual-router address 10.6.0.254
+   ip address virtual 10.6.0.254/24
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -1389,18 +1383,15 @@ interface Loopback0
 !
 interface Vlan10
    vrf DEV
-   ip address 10.4.0.253/24
-   ip virtual-router address 10.4.0.254
+   ip address virtual  10.4.0.254/24
 !
 interface Vlan11
    vrf STAGE
-   ip address 10.5.0.253/24
-   ip virtual-router address 10.5.0.254
+   ip address virtual 10.5.0.254/24
 !
 interface Vlan20
    vrf PROD
-   ip address 10.6.0.253/24
-   ip virtual-router address 10.6.0.254
+   ip address virtual 10.6.0.254/24
 !
 interface Vlan2000
    vrf DEV
@@ -1493,7 +1484,7 @@ router bgp 64086.60001
       neighbor 10.4.254.1 route-map EX_MACIP_RM out
       neighbor 10.4.255.1 remote-as 64086.59999
       neighbor 10.4.255.1 route-map EX_MACIP_RM out
-      aggregate-address 10.4.0.0/16 as-set summary-only
+      aggregate-address 10.4.0.0/16 summary-only
       redistribute connected
    !
    vrf PROD
@@ -1558,18 +1549,15 @@ interface Loopback0
 !
 interface Vlan10
    vrf DEV
-   ip address 10.4.0.252/24
-   ip virtual-router address 10.4.0.254
+   ip address virtual 10.4.0.254/24
 !
 interface Vlan11
    vrf STAGE
-   ip address 10.5.0.252/24
-   ip virtual-router address 10.5.0.254
+   ip address virtual 10.5.0.254/24
 !
 interface Vlan20
    vrf PROD
-   ip address 10.6.0.252/24
-   ip virtual-router address 10.6.0.254
+   ip address virtual 10.6.0.254/24
 !
 interface Vlan2010
    vrf DEV
@@ -1662,7 +1650,7 @@ router bgp 64086.60001
       neighbor 10.4.254.5 route-map EX_MACIP_RM out
       neighbor 10.4.255.5 remote-as 64086.59999
       neighbor 10.4.255.5 route-map EX_MACIP_RM out
-      aggregate-address 10.4.0.0/16 as-set summary-only
+      aggregate-address 10.4.0.0/16 summary-only
       redistribute connected
    !
    vrf PROD
@@ -1995,18 +1983,15 @@ interface Loopback0
 !
 interface Vlan110
    vrf DEV
-   ip address 10.12.0.250/24
-   ip virtual-router address 10.12.0.254
+   ip address virtual 10.12.0.254/24
 !
 interface Vlan111
    vrf STAGE
-   ip address 10.13.0.250/24
-   ip virtual-router address 10.13.0.254
+   ip address virtual 10.13.0.254/24
 !
 interface Vlan120
    vrf PROD
-   ip address 10.14.0.250/24
-   ip virtual-router address 10.14.0.254
+   ip address virtual 10.14.0.254/24
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -2149,20 +2134,17 @@ interface Ethernet8
 interface Loopback0
    ip address 10.8.0.2/32
 !
-interface Vlan10
+interface Vlan110
    vrf DEV
-   ip address 10.12.0.251/24
-   ip virtual-router address 10.12.0.254
+   ip address virtual 10.12.0.254/24
 !
 interface Vlan111
    vrf STAGE
-   ip address 10.13.0.251/24
-   ip virtual-router address 10.13.0.254
+   ip address virtual 10.13.0.254/24
 !
 interface Vlan120
    vrf PROD
-   ip address 10.14.0.251/24
-   ip virtual-router address 10.14.0.254
+   ip address virtual 10.14.0.254/24
 !
 interface Vxlan1
    vxlan source-interface Loopback0
@@ -2270,18 +2252,15 @@ interface Loopback0
 !
 interface Vlan110
    vrf DEV
-   ip address 10.12.0.252/24
-   ip virtual-router address 10.12.0.254
+   ip address virtual 10.12.0.254/24
 !
 interface Vlan111
    vrf STAGE
-   ip address 10.13.0.252/24
-   ip virtual-router address 10.13.0.254
+   ip address virtual 10.13.0.254/24
 !
 interface Vlan120
    vrf PROD
-   ip address 10.14.0.252/24
-   ip virtual-router address 10.14.0.254
+   ip address virtual 10.14.0.254/24
 !
 interface Vlan2100
    vrf DEV
@@ -2439,18 +2418,15 @@ interface Loopback0
 !
 interface Vlan110
    vrf DEV
-   ip address 10.12.0.253/24
-   ip virtual-router address 10.12.0.254
+   ip address virtual 10.12.0.254/24
 !
 interface Vlan111
    vrf STAGE
-   ip address 10.13.0.253/24
-   ip virtual-router address 10.13.0.254
+   ip address virtual 10.13.0.254/24
 !
 interface Vlan120
    vrf PROD
-   ip address 10.14.0.253/24
-   ip virtual-router address 10.14.0.254
+   ip address virtual 10.14.0.254/24
 !
 interface Vlan2110
    vrf DEV
